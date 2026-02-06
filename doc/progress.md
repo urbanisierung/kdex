@@ -17,3 +17,28 @@
 - Expanded problem statement to include knowledge management (Obsidian, markdown notes)
 - Added markdown-aware processing: frontmatter, wiki-links, headings extraction
 - Added knowledge management features to brainstormed section
+- **Implemented Phase 1: Foundation**
+  - Created configuration system (`src/config/mod.rs`) with OS-aware paths
+  - Created error types (`src/error.rs`) with thiserror
+  - Created database layer (`src/db/mod.rs`) with SQLite + FTS5
+  - Database schema with repositories, files, and contents tables
+- **Implemented Phase 2: Core Indexing Engine**
+  - Created indexer (`src/core/indexer.rs`) with parallel file processing
+  - Binary file detection (extension + null byte check)
+  - Incremental indexing with mtime/size comparison
+  - Content hashing with blake3
+- **Implemented Phase 3: Search System**
+  - Created searcher (`src/core/searcher.rs`) with FTS5 query escaping
+  - Search filters by repository and file type
+  - Result snippets with match highlighting
+- **Implemented Phase 4: TUI (App Mode)**
+  - Created TUI app (`src/tui/`) with ratatui
+  - Search view with live search
+  - Repos view for managing indexed repositories
+  - Help overlay with keyboard shortcuts
+  - Minimum terminal size detection
+- **Implemented Phase 5: CLI Mode**
+  - Created CLI commands: index, search, update, list, remove, config
+  - Progress bar for indexing operations
+  - JSON output option for scripting
+  - Color-coded output with owo-colors
