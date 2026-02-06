@@ -1,0 +1,13 @@
+[package]
+name = "knowledge-index"
+version = "0.1.0"
+edition = "2021"
+description = "A CLI application for managing your knowledge index"
+authors = ["urbanisierung"]
+license = "MIT"
+
+[dependencies]
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"
