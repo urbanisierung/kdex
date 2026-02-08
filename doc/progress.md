@@ -4,6 +4,38 @@
 
 ### 2026-02-08
 
+- **Implemented Priority Optional Features**
+  - Added `--group-by-repo` flag to search command
+    - Groups search results by repository in both CLI and JSON output
+    - Shows repository headers with result counts
+  - Added YAML frontmatter parsing for markdown files
+    - Extracts title, tags from frontmatter
+    - Stores in `markdown_meta` table
+  - Added heading extraction from markdown files
+    - Parses ATX-style headings (# through ######)
+    - Stores heading hierarchy in database
+  - Added wiki-link extraction (`[[link]]` and `[[link|display]]`)
+  - Added `rebuild-embeddings` command
+    - Regenerates embeddings without full re-index
+    - Supports `--repo` filter for specific repositories
+    - Shows progress indicator during processing
+  - Added `watch` command for file system monitoring
+    - Watches indexed repositories for changes
+    - Automatic re-indexing on file changes
+  - Added progress indicator for embedding generation
+    - Shows file count progress during rebuild
+
+- **Roadmap Review and Cleanup**
+  - Verified all previously implemented items in Phases 1-7 and marked as checked
+  - Marked optional/future items with *(Optional)*, *(Future)*, or *(Pre-release)* tags
+  - Terminal setup/teardown (Part 4.1) was already implemented - marked complete
+  - Size warning message (Part 4.2) was already implemented - marked complete
+  - Keyboard shortcuts in status bar (Part 4.12) already implemented - marked complete
+  - Accessibility features (visual, motor, cognitive) already implemented - marked complete
+  - Documentation items (README, doc/ files, inline docs) already complete - marked complete
+  - Marked Phase 9 Remote items as *(Future)* since they are intentionally deferred
+  - Marked Phase 10 Polish items as *(Pre-release)* or *(Optional)* appropriately
+
 - **Implemented Phase 8: Vector Search (Semantic Search)**
   - Added `fastembed` crate (v5) for local embedding generation
   - Uses all-MiniLM-L6-v2 model (384 dimensions, ~22MB)

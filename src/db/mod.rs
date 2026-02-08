@@ -570,6 +570,50 @@ impl Database {
     }
 
     // =========================================================================
+    // Markdown Metadata
+    // =========================================================================
+
+    /// Store markdown metadata for a file
+    pub fn store_markdown_meta(
+        &self,
+        file_id: i64,
+        title: Option<&str>,
+        tags_json: &str,
+        links_json: &str,
+        headings_json: &str,
+    ) -> Result<()> {
+        let conn = self.conn.lock().map_err(|e| AppError::Other(e.to_string()))?;
+
+        conn.execute(
+            "INSERT OR REPLACE INTO markdown_meta (file_id, title, tags, links, headings)
+             VALUES (?1, ?2, ?3, ?4, ?5)",
+            params![file_id, title, tags_json, links_json, headings_json],
+        )?;
+
+        Ok(())
+    }
+
+    /// Delete markdown metadata for specific files
+    #[allow(dead_code)]
+    pub fn delete_markdown_meta(&self, file_ids: &[i64]) -> Result<()> {
+        if file_ids.is_empty() {
+            return Ok(());
+        }
+
+        let conn = self.conn.lock().map_err(|e| AppError::Other(e.to_string()))?;
+
+        let placeholders: Vec<String> = file_ids.iter().map(|_| "?".to_string()).collect();
+        let placeholders_str = placeholders.join(",");
+
+        conn.execute(
+            &format!("DELETE FROM markdown_meta WHERE file_id IN ({placeholders_str})"),
+            rusqlite::params_from_iter(file_ids),
+        )?;
+
+        Ok(())
+    }
+
+    // =========================================================================
     // Embeddings
     // =========================================================================
 

@@ -30,9 +30,16 @@ This document tracks all features of the knowledge-index CLI application.
 | **Hybrid Search** | Combined lexical + semantic search with RRF fusion | 2026-02-08 |
 | **Text Chunking** | Smart chunking for embedding large files | 2026-02-08 |
 | **Search Mode Selection** | CLI flags for --semantic, --hybrid, --lexical | 2026-02-08 |
+| **Group by Repository** | `--group-by-repo` flag clusters search results | 2026-02-08 |
+| **Markdown Frontmatter** | Parse YAML frontmatter (title, tags) | 2026-02-08 |
+| **Markdown Headings** | Extract and index heading hierarchy | 2026-02-08 |
+| **Wiki-links** | Extract `[[link]]` style wiki links | 2026-02-08 |
+| **Rebuild Embeddings** | `rebuild-embeddings` command for regeneration | 2026-02-08 |
+| **Watch Command** | `watch` command for live file monitoring | 2026-02-08 |
+| **Embedding Progress** | Progress indicator during embedding generation | 2026-02-08 |
 
 ## Planned Features
 
 - Background file watching (TUI integration)
-- Markdown frontmatter parsing
+- Preview pane in TUI
 - Remote sync capabilities

@@ -1,6 +1,7 @@
 mod config_cmd;
 mod index_cmd;
 mod list_cmd;
+mod rebuild_embeddings_cmd;
 mod remove_cmd;
 mod search_cmd;
 mod update_cmd;
@@ -22,6 +23,9 @@ pub mod remove {
 }
 pub mod config {
     pub use super::config_cmd::run;
+}
+pub mod rebuild_embeddings {
+    pub use super::rebuild_embeddings_cmd::run;
 }
 
 use owo_colors::OwoColorize;

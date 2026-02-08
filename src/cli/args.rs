@@ -80,6 +80,10 @@ pub enum Commands {
         #[arg(long, default_value = "20")]
         limit: usize,
 
+        /// Group results by repository
+        #[arg(long)]
+        group_by_repo: bool,
+
         /// Use semantic (vector) search
         #[arg(long, conflicts_with_all = ["hybrid", "lexical"])]
         semantic: bool,
@@ -139,4 +143,25 @@ pub enum Commands {
 
     /// Start MCP server for AI tool integration
     Mcp {},
+
+    /// Watch for file changes and re-index automatically
+    Watch {
+        /// Watch all indexed repositories
+        #[arg(long)]
+        all: bool,
+
+        /// Specific repository path to watch
+        path: Option<PathBuf>,
+    },
+
+    /// Rebuild embeddings for semantic search
+    #[command(after_help = "Examples:
+  knowledge-index rebuild-embeddings         Rebuild all embeddings
+  knowledge-index rebuild-embeddings --repo myproject
+")]
+    RebuildEmbeddings {
+        /// Filter by repository name
+        #[arg(long)]
+        repo: Option<String>,
+    },
 }

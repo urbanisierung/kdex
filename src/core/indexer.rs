@@ -8,7 +8,7 @@ use std::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
 use std::time::Instant;
 
 use crate::config::Config;
-use crate::core::Embedder;
+use crate::core::{parse_markdown, Embedder};
 use crate::db::{Database, FileRecord, FileType, RepoStatus, Repository};
 use crate::error::{AppError, Result};
 
@@ -393,7 +393,7 @@ impl Indexer {
 
         // Insert into database
         #[allow(clippy::cast_possible_wrap)]
-        self.db.insert_file(
+        let file_id = self.db.insert_file(
             repo_id,
             relative,
             &hash_str,
@@ -403,31 +403,38 @@ impl Indexer {
             &content_str,
         )?;
 
+        // Parse and store markdown metadata if it's a markdown file
+        if file_type == FileType::Markdown {
+            let meta = parse_markdown(&content_str);
+            let _ = self.db.store_markdown_meta(
+                file_id,
+                meta.title.as_deref(),
+                &meta.tags_json(),
+                &meta.links_json(),
+                &meta.headings_json(),
+            );
+        }
+
         // Generate and store embeddings if enabled
         if let Some(ref embedder) = self.embedder {
-            // Get the file_id we just inserted
-            if let Ok(files) = self.db.get_repository_files(repo_id) {
-                if let Some(file_record) = files.iter().find(|f| f.relative_path == relative) {
-                    // Generate embeddings for chunks
-                    if let Ok(chunk_embeddings) = embedder.embed_content(&content_str) {
-                        let embeddings: Vec<(usize, usize, usize, &str, &[f32])> = chunk_embeddings
-                            .iter()
-                            .enumerate()
-                            .map(|(idx, ce)| {
-                                (
-                                    idx,
-                                    ce.chunk.start_offset,
-                                    ce.chunk.end_offset,
-                                    ce.chunk.text.as_str(),
-                                    ce.embedding.as_slice(),
-                                )
-                            })
-                            .collect();
+            // Generate embeddings for chunks
+            if let Ok(chunk_embeddings) = embedder.embed_content(&content_str) {
+                let embeddings: Vec<(usize, usize, usize, &str, &[f32])> = chunk_embeddings
+                    .iter()
+                    .enumerate()
+                    .map(|(idx, ce)| {
+                        (
+                            idx,
+                            ce.chunk.start_offset,
+                            ce.chunk.end_offset,
+                            ce.chunk.text.as_str(),
+                            ce.embedding.as_slice(),
+                        )
+                    })
+                    .collect();
 
-                        // Store embeddings (ignore errors to not block indexing)
-                        let _ = self.db.store_embeddings(file_record.id, &embeddings);
-                    }
-                }
+                // Store embeddings (ignore errors to not block indexing)
+                let _ = self.db.store_embeddings(file_id, &embeddings);
             }
         }
 
