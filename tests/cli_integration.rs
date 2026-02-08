@@ -120,7 +120,11 @@ fn test_full_index_search_cycle() {
         .output()
         .expect("Failed to run index");
 
-    assert!(output.status.success(), "Index failed: {:?}", String::from_utf8_lossy(&output.stderr));
+    assert!(
+        output.status.success(),
+        "Index failed: {:?}",
+        String::from_utf8_lossy(&output.stderr)
+    );
 
     // Search for known content
     let output = Command::new(binary_path())
