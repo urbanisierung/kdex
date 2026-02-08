@@ -64,7 +64,7 @@ impl MarkdownMeta {
             .collect();
         serde_json::to_string(&heading_strs).unwrap_or_else(|_| "[]".to_string())
     }
-    
+
     /// Convert code blocks to JSON string for storage
     #[must_use]
     #[allow(dead_code)]
@@ -109,7 +109,7 @@ pub fn parse_markdown_with_options(content: &str, extract_code: bool) -> Markdow
 
     // Extract wiki-style links
     meta.links = extract_wiki_links(content);
-    
+
     // Extract code blocks if requested
     if extract_code {
         meta.code_blocks = extract_code_blocks(content);
@@ -282,14 +282,14 @@ fn extract_wiki_links(content: &str) -> Vec<String> {
 
             while i < chars.len() {
                 let ch = chars[i];
-                
+
                 // Check for closing ]]
                 if ch == ']' && i + 1 < chars.len() && chars[i + 1] == ']' {
                     i += 2; // skip ]]
                     found_closing = true;
                     break;
                 }
-                
+
                 // Stop at pipe (for [[target|display]] format)
                 if ch == '|' {
                     // Skip until ]]
@@ -303,12 +303,12 @@ fn extract_wiki_links(content: &str) -> Vec<String> {
                     }
                     break;
                 }
-                
+
                 // Links don't span lines
                 if ch == '\n' {
                     break;
                 }
-                
+
                 link.push(ch);
                 i += 1;
             }
@@ -352,11 +352,11 @@ fn extract_code_blocks(content: &str) -> Vec<CodeBlock> {
     let mut blocks = Vec::new();
     let content = skip_frontmatter(content);
     let lines: Vec<&str> = content.lines().collect();
-    
+
     let mut i = 0;
     while i < lines.len() {
         let line = lines[i].trim();
-        
+
         // Check for fenced code block start (``` or ~~~)
         let fence = if line.starts_with("```") {
             Some("```")
@@ -365,16 +365,16 @@ fn extract_code_blocks(content: &str) -> Vec<CodeBlock> {
         } else {
             None
         };
-        
+
         if let Some(fence_char) = fence {
             let language = line.strip_prefix(fence_char)
                 .map(str::trim)
                 .filter(|s| !s.is_empty())
                 .map(|s| s.split_whitespace().next().unwrap_or(s).to_string());
-            
+
             i += 1;
             let mut code_content = String::new();
-            
+
             // Collect lines until closing fence
             while i < lines.len() {
                 let code_line = lines[i];
@@ -387,7 +387,7 @@ fn extract_code_blocks(content: &str) -> Vec<CodeBlock> {
                 code_content.push_str(code_line);
                 i += 1;
             }
-            
+
             if !code_content.is_empty() {
                 blocks.push(CodeBlock {
                     language,
@@ -397,7 +397,7 @@ fn extract_code_blocks(content: &str) -> Vec<CodeBlock> {
         }
         i += 1;
     }
-    
+
     blocks
 }
 
@@ -416,9 +416,9 @@ pub fn strip_markdown_syntax(content: &str) -> String {
     let content = skip_frontmatter(content);
     let mut result = String::with_capacity(content.len());
     let lines: Vec<&str> = content.lines().collect();
-    
+
     let mut in_code_block = false;
-    
+
     for line in lines {
         // Handle code block boundaries
         if line.trim().starts_with("```") || line.trim().starts_with("~~~") {
@@ -426,19 +426,19 @@ pub fn strip_markdown_syntax(content: &str) -> String {
             result.push('\n');
             continue;
         }
-        
+
         // Keep code block content as-is
         if in_code_block {
             result.push_str(line);
             result.push('\n');
             continue;
         }
-        
+
         let processed = strip_line(line);
         result.push_str(&processed);
         result.push('\n');
     }
-    
+
     result
 }
 
@@ -446,7 +446,7 @@ pub fn strip_markdown_syntax(content: &str) -> String {
 #[allow(dead_code)]
 fn strip_line(line: &str) -> String {
     let mut result = line.to_string();
-    
+
     // Remove heading markers
     if result.trim_start().starts_with('#') {
         let trimmed = result.trim_start();
@@ -455,39 +455,39 @@ fn strip_line(line: &str) -> String {
             result = trimmed[hash_count..].trim_start().to_string();
         }
     }
-    
+
     // Remove blockquote markers
     while result.trim_start().starts_with('>') {
         let trimmed = result.trim_start();
         result = trimmed[1..].trim_start().to_string();
     }
-    
+
     // Remove bold/italic markers
     result = result.replace("**", "");
     result = result.replace("__", "");
     // Remove single asterisks/underscores that aren't part of words (simplified)
-    
+
     // Remove inline code backticks
     result = result.replace('`', "");
-    
+
     // Remove strikethrough
     result = result.replace("~~", "");
-    
+
     // Convert markdown links [text](url) to just text
     result = strip_markdown_links(&result);
-    
+
     // Convert wiki links [[link|display]] to display, [[link]] to link
     result = strip_wiki_links(&result);
-    
+
     // Remove image syntax ![alt](url)
     result = strip_images(&result);
-    
+
     // Remove horizontal rules
     let trimmed = result.trim();
     if trimmed == "---" || trimmed == "***" || trimmed == "___" {
         result = String::new();
     }
-    
+
     result
 }
 
@@ -497,18 +497,18 @@ fn strip_markdown_links(text: &str) -> String {
     let mut result = String::with_capacity(text.len());
     let chars: Vec<char> = text.chars().collect();
     let mut i = 0;
-    
+
     while i < chars.len() {
         if chars[i] == '[' {
             // Look for ]( pattern
             let mut j = i + 1;
             let mut link_text = String::new();
-            
+
             while j < chars.len() && chars[j] != ']' && chars[j] != '\n' {
                 link_text.push(chars[j]);
                 j += 1;
             }
-            
+
             if j < chars.len() && chars[j] == ']' && j + 1 < chars.len() && chars[j + 1] == '(' {
                 // Found [text](, now skip until )
                 let mut k = j + 2;
@@ -525,24 +525,24 @@ fn strip_markdown_links(text: &str) -> String {
         result.push(chars[i]);
         i += 1;
     }
-    
+
     result
 }
 
-/// Strip wiki links [[link|display]] -> display, [[link]] -> link  
+/// Strip wiki links [[link|display]] -> display, [[link]] -> link
 #[allow(dead_code)]
 fn strip_wiki_links(text: &str) -> String {
     let mut result = String::with_capacity(text.len());
     let chars: Vec<char> = text.chars().collect();
     let mut i = 0;
-    
+
     while i < chars.len() {
         if i + 1 < chars.len() && chars[i] == '[' && chars[i + 1] == '[' {
             i += 2;
             let mut link = String::new();
             let mut display = String::new();
             let mut in_display = false;
-            
+
             while i < chars.len() {
                 if i + 1 < chars.len() && chars[i] == ']' && chars[i + 1] == ']' {
                     i += 2;
@@ -557,7 +557,7 @@ fn strip_wiki_links(text: &str) -> String {
                 }
                 i += 1;
             }
-            
+
             if display.is_empty() {
                 result.push_str(&link);
             } else {
@@ -568,7 +568,7 @@ fn strip_wiki_links(text: &str) -> String {
         result.push(chars[i]);
         i += 1;
     }
-    
+
     result
 }
 
@@ -578,18 +578,18 @@ fn strip_images(text: &str) -> String {
     let mut result = String::with_capacity(text.len());
     let chars: Vec<char> = text.chars().collect();
     let mut i = 0;
-    
+
     while i < chars.len() {
         if chars[i] == '!' && i + 1 < chars.len() && chars[i + 1] == '[' {
             // Look for ]( pattern
             let mut j = i + 2;
             let mut alt_text = String::new();
-            
+
             while j < chars.len() && chars[j] != ']' && chars[j] != '\n' {
                 alt_text.push(chars[j]);
                 j += 1;
             }
-            
+
             if j < chars.len() && chars[j] == ']' && j + 1 < chars.len() && chars[j + 1] == '(' {
                 let mut k = j + 2;
                 while k < chars.len() && chars[k] != ')' && chars[k] != '\n' {
@@ -605,7 +605,7 @@ fn strip_images(text: &str) -> String {
         result.push(chars[i]);
         i += 1;
     }
-    
+
     result
 }
 

@@ -165,7 +165,7 @@ impl Database {
     /// Open or create the database
     pub fn open() -> Result<Self> {
         let db_path = Config::database_path()?;
-        
+
         // Ensure parent directory exists
         if let Some(parent) = db_path.parent() {
             std::fs::create_dir_all(parent)?;
@@ -175,7 +175,7 @@ impl Database {
         let db = Self {
             conn: Arc::new(Mutex::new(conn)),
         };
-        
+
         db.initialize()?;
         Ok(db)
     }
@@ -201,7 +201,7 @@ impl Database {
     /// Add a new repository
     pub fn add_repository(&self, path: &Path, name: Option<String>) -> Result<Repository> {
         let conn = self.conn.lock().map_err(|e| AppError::Other(e.to_string()))?;
-        
+
         let canonical = path.canonicalize()?;
         let name = name.unwrap_or_else(|| {
             canonical
@@ -220,7 +220,7 @@ impl Database {
         )?;
 
         let id = conn.last_insert_rowid();
-        
+
         Ok(Repository {
             id,
             path: canonical,
@@ -237,9 +237,9 @@ impl Database {
     pub fn get_repository_by_path(&self, path: &Path) -> Result<Option<Repository>> {
         let conn = self.conn.lock().map_err(|e| AppError::Other(e.to_string()))?;
         let canonical = path.canonicalize().unwrap_or_else(|_| path.to_path_buf());
-        
+
         let mut stmt = conn.prepare(
-            "SELECT id, path, name, created_at, last_indexed_at, file_count, total_size_bytes, status 
+            "SELECT id, path, name, created_at, last_indexed_at, file_count, total_size_bytes, status
              FROM repositories WHERE path = ?1"
         )?;
 
@@ -268,9 +268,9 @@ impl Database {
     /// Get all repositories
     pub fn list_repositories(&self) -> Result<Vec<Repository>> {
         let conn = self.conn.lock().map_err(|e| AppError::Other(e.to_string()))?;
-        
+
         let mut stmt = conn.prepare(
-            "SELECT id, path, name, created_at, last_indexed_at, file_count, total_size_bytes, status 
+            "SELECT id, path, name, created_at, last_indexed_at, file_count, total_size_bytes, status
              FROM repositories ORDER BY name"
         )?;
 
@@ -313,9 +313,9 @@ impl Database {
     ) -> Result<()> {
         let conn = self.conn.lock().map_err(|e| AppError::Other(e.to_string()))?;
         let now = Utc::now();
-        
+
         conn.execute(
-            "UPDATE repositories SET last_indexed_at = ?1, file_count = ?2, total_size_bytes = ?3, status = ?4 
+            "UPDATE repositories SET last_indexed_at = ?1, file_count = ?2, total_size_bytes = ?3, status = ?4
              WHERE id = ?5",
             params![
                 now.to_rfc3339(),
@@ -331,19 +331,19 @@ impl Database {
     /// Delete a repository and all its files
     pub fn delete_repository(&self, repo_id: i64) -> Result<()> {
         let conn = self.conn.lock().map_err(|e| AppError::Other(e.to_string()))?;
-        
+
         // Delete FTS content first
         conn.execute(
             "DELETE FROM contents WHERE file_id IN (SELECT id FROM files WHERE repo_id = ?1)",
             params![repo_id],
         )?;
-        
+
         // Delete files
         conn.execute("DELETE FROM files WHERE repo_id = ?1", params![repo_id])?;
-        
+
         // Delete repository
         conn.execute("DELETE FROM repositories WHERE id = ?1", params![repo_id])?;
-        
+
         Ok(())
     }
 
@@ -420,9 +420,9 @@ impl Database {
     /// Get existing files for a repository (for incremental updates)
     pub fn get_repository_files(&self, repo_id: i64) -> Result<Vec<FileRecord>> {
         let conn = self.conn.lock().map_err(|e| AppError::Other(e.to_string()))?;
-        
+
         let mut stmt = conn.prepare(
-            "SELECT id, repo_id, relative_path, content_hash, file_size_bytes, last_modified_at, file_type 
+            "SELECT id, repo_id, relative_path, content_hash, file_size_bytes, last_modified_at, file_type
              FROM files WHERE repo_id = ?1"
         )?;
 
@@ -448,24 +448,24 @@ impl Database {
         if file_ids.is_empty() {
             return Ok(());
         }
-        
+
         let conn = self.conn.lock().map_err(|e| AppError::Other(e.to_string()))?;
-        
+
         let placeholders: Vec<String> = file_ids.iter().map(|_| "?".to_string()).collect();
         let placeholders_str = placeholders.join(",");
-        
+
         // Delete from FTS
         conn.execute(
             &format!("DELETE FROM contents WHERE file_id IN ({placeholders_str})"),
             rusqlite::params_from_iter(file_ids),
         )?;
-        
+
         // Delete from files
         conn.execute(
             &format!("DELETE FROM files WHERE id IN ({placeholders_str})"),
             rusqlite::params_from_iter(file_ids),
         )?;
-        
+
         Ok(())
     }
 
@@ -510,14 +510,14 @@ impl Database {
         params_vec.push(Box::new(offset as i64));
 
         let mut stmt = conn.prepare(&sql)?;
-        
+
         let params_refs: Vec<&dyn rusqlite::ToSql> = params_vec.iter().map(std::convert::AsRef::as_ref).collect();
-        
+
         let results = stmt.query_map(params_refs.as_slice(), |row| {
             let repo_path = PathBuf::from(row.get::<_, String>(1)?);
             let relative_path = PathBuf::from(row.get::<_, String>(2)?);
             let absolute_path = repo_path.join(&relative_path);
-            
+
             Ok(SearchResult {
                 repo_name: row.get(0)?,
                 repo_path,
@@ -564,7 +564,7 @@ impl Database {
         }
 
         let params_refs: Vec<&dyn rusqlite::ToSql> = params_vec.iter().map(std::convert::AsRef::as_ref).collect();
-        
+
         let count: i64 = conn.query_row(&sql, params_refs.as_slice(), |row| row.get(0))?;
         Ok(count)
     }
@@ -660,17 +660,17 @@ impl Database {
         if file_ids.is_empty() {
             return Ok(());
         }
-        
+
         let conn = self.conn.lock().map_err(|e| AppError::Other(e.to_string()))?;
-        
+
         let placeholders: Vec<String> = file_ids.iter().map(|_| "?".to_string()).collect();
         let placeholders_str = placeholders.join(",");
-        
+
         conn.execute(
             &format!("DELETE FROM embeddings WHERE file_id IN ({placeholders_str})"),
             rusqlite::params_from_iter(file_ids),
         )?;
-        
+
         Ok(())
     }
 
@@ -686,7 +686,7 @@ impl Database {
 
         // Build query with optional filters
         let mut sql = String::from(
-            "SELECT r.name, r.path, f.relative_path, f.file_type, 
+            "SELECT r.name, r.path, f.relative_path, f.file_type,
                     e.chunk_text, e.embedding, e.start_offset, e.end_offset
              FROM embeddings e
              JOIN files f ON e.file_id = f.id
@@ -709,7 +709,7 @@ impl Database {
         let params_refs: Vec<&dyn rusqlite::ToSql> = params_vec.iter().map(std::convert::AsRef::as_ref).collect();
 
         let mut stmt = conn.prepare(&sql)?;
-        
+
         let rows = stmt.query_map(params_refs.as_slice(), |row| {
             let repo_name: String = row.get(0)?;
             let repo_path: String = row.get(1)?;
@@ -725,10 +725,10 @@ impl Database {
 
         // Calculate similarities and collect results
         let mut results: Vec<VectorSearchResult> = Vec::new();
-        
+
         for row_result in rows {
             let (repo_name, repo_path, relative_path, file_type, chunk_text, embedding_bytes, start_offset, end_offset) = row_result?;
-            
+
             // Deserialize embedding from bytes
             let doc_embedding: Vec<f32> = embedding_bytes
                 .chunks(4)
@@ -743,11 +743,11 @@ impl Database {
 
             // Calculate cosine similarity
             let similarity = Self::cosine_sim(query_embedding, &doc_embedding);
-            
+
             let repo_path = PathBuf::from(&repo_path);
             let file_path = PathBuf::from(&relative_path);
             let absolute_path = repo_path.join(&file_path);
-            
+
             results.push(VectorSearchResult {
                 repo_name,
                 repo_path,

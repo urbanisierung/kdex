@@ -86,7 +86,7 @@ pub fn run(args: &Args) -> Result<()> {
         }
 
         println!();
-        println!("Status: {} ready  {} pending  {} indexing  {} error", 
+        println!("Status: {} ready  {} pending  {} indexing  {} error",
             if colors { "●".green().to_string() } else { "●".to_string() },
             if colors { "○".yellow().to_string() } else { "○".to_string() },
             if colors { "◐".cyan().to_string() } else { "◐".to_string() },
@@ -99,7 +99,7 @@ pub fn run(args: &Args) -> Result<()> {
 
 fn format_time_ago(duration: chrono::Duration) -> String {
     let seconds = duration.num_seconds();
-    
+
     if seconds < 60 {
         "just now".to_string()
     } else if seconds < 3600 {

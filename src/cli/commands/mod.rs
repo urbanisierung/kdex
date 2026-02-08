@@ -76,11 +76,11 @@ pub fn print_warning(msg: &str, use_colors: bool) {
 pub fn confirm(prompt: &str) -> bool {
     print!("{prompt} [y/N] ");
     io::stdout().flush().ok();
-    
+
     let mut input = String::new();
     if io::stdin().read_line(&mut input).is_err() {
         return false;
     }
-    
+
     matches!(input.trim().to_lowercase().as_str(), "y" | "yes")
 }

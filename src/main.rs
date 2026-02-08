@@ -14,7 +14,7 @@ use error::Result;
 
 fn main() {
     let args = Args::parse();
-    
+
     if let Err(e) = run_with_args(&args) {
         if args.debug {
             eprintln!("Error: {e:?}");
@@ -74,10 +74,10 @@ fn run_watcher(all: bool, path: Option<std::path::PathBuf>, args: &Args) -> Resu
     use std::sync::Arc;
     use std::thread;
     use std::time::Duration;
-    
+
     let db = db::Database::open()?;
     let config = Arc::new(config::Config::load()?);
-    
+
     let repos = if all {
         db.list_repositories()?
     } else if let Some(p) = path {
@@ -93,31 +93,31 @@ fn run_watcher(all: bool, path: Option<std::path::PathBuf>, args: &Args) -> Resu
             .filter(|r| r.path == cwd)
             .collect()
     };
-    
+
     if repos.is_empty() {
         if !args.quiet {
             eprintln!("No repositories to watch. Index a directory first.");
         }
         return Ok(());
     }
-    
+
     // Check platform limits (Linux inotify)
     if !args.quiet {
         let total_dirs: usize = repos
             .iter()
             .filter_map(|r| estimate_directory_count(&r.path).ok())
             .sum();
-        
+
         let limits = check_inotify_limit(total_dirs);
         if let Some(warning) = limits.warning {
             eprintln!("{warning}");
             eprintln!();
         }
     }
-    
+
     if !args.quiet {
-        println!("Watching {} repositor{} for changes...", 
-            repos.len(), 
+        println!("Watching {} repositor{} for changes...",
+            repos.len(),
             if repos.len() == 1 { "y" } else { "ies" }
         );
         for repo in &repos {
@@ -125,23 +125,23 @@ fn run_watcher(all: bool, path: Option<std::path::PathBuf>, args: &Args) -> Resu
         }
         println!("Press Ctrl+C to stop.");
     }
-    
+
     let mut watcher = IndexWatcher::new(config)?;
-    
+
     // Add all repository paths to watch
     for repo in &repos {
         watcher.watch(repo.path.clone())?;
     }
-    
+
     // Main watch loop
     loop {
         let batches = watcher.poll_changes();
-        
+
         for batch in batches {
             if !args.quiet {
                 println!("Changes detected in {}:", batch.repo_path.display());
             }
-            
+
             for change in &batch.changes {
                 if !args.quiet {
                     let action = match change.change_type {
@@ -152,13 +152,13 @@ fn run_watcher(all: bool, path: Option<std::path::PathBuf>, args: &Args) -> Resu
                     println!("  {} {}", action, change.path.display());
                 }
             }
-            
+
             // Re-index the changed repository
             if let Some(repo) = repos.iter().find(|r| r.path == batch.repo_path) {
                 let indexer_config = config::Config::load()?;
                 let indexer_db = db::Database::open()?;
                 let indexer = crate::core::Indexer::new(indexer_db, indexer_config);
-                
+
                 match indexer.index(&repo.path, Some(repo.name.clone()), |_| {}) {
                     Ok(result) => {
                         if !args.quiet {
@@ -174,7 +174,7 @@ fn run_watcher(all: bool, path: Option<std::path::PathBuf>, args: &Args) -> Resu
                 }
             }
         }
-        
+
         thread::sleep(Duration::from_millis(100));
     }
 }

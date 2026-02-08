@@ -68,7 +68,7 @@ pub struct App {
 
     // Status
     pub status_message: Option<(String, StatusLevel)>,
-    
+
     // Loading indicator
     pub loading: bool,
     pub loading_message: Option<String>,
@@ -102,7 +102,7 @@ impl App {
             loading_message: None,
         }
     }
-    
+
     /// Dismiss welcome screen and go to search mode
     pub fn dismiss_welcome(&mut self) {
         self.mode = AppMode::Search;
@@ -116,7 +116,7 @@ impl App {
         }
 
         self.search_loading = true;
-        
+
         match self.searcher.search(&self.search_input, None, None, 50, 0) {
             Ok(results) => {
                 self.search_results = results;
@@ -198,7 +198,7 @@ impl App {
         let path = &result.absolute_path;
 
         let _editor = std::env::var("EDITOR").unwrap_or_else(|_| "vim".to_string());
-        
+
         // We need to restore terminal, run editor, then reinitialize
         // For simplicity, just show a message for now
         self.set_status(format!("Open: {}", path.display()), StatusLevel::Info);
@@ -212,7 +212,7 @@ impl App {
         }
 
         let repo = &self.repos[self.repos_selected];
-        
+
         if let Err(e) = self.db.delete_repository(repo.id) {
             self.set_status(format!("Delete error: {e}"), StatusLevel::Error);
             return;
@@ -220,7 +220,7 @@ impl App {
 
         self.set_status(format!("Removed: {}", repo.name), StatusLevel::Success);
         self.refresh_repos();
-        
+
         if self.repos_selected >= self.repos.len() && !self.repos.is_empty() {
             self.repos_selected = self.repos.len() - 1;
         }
@@ -314,7 +314,7 @@ impl App {
                     }
                     self.set_status(format!("Removed: {name}"), StatusLevel::Success);
                     self.refresh_repos();
-                    
+
                     if self.repos_selected >= self.repos.len() && !self.repos.is_empty() {
                         self.repos_selected = self.repos.len() - 1;
                     }

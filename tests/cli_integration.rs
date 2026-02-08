@@ -16,17 +16,17 @@ fn binary_path() -> PathBuf {
 /// Create a temporary test directory with sample files
 fn create_test_repo() -> tempfile::TempDir {
     let tmp = tempfile::tempdir().unwrap();
-    
+
     // Create some test files
     fs::write(tmp.path().join("README.md"), "# Test Project\n\nThis is a test project.").unwrap();
     fs::write(tmp.path().join("main.rs"), "fn main() {\n    println!(\"Hello\");\n}").unwrap();
     fs::write(tmp.path().join("lib.rs"), "pub fn greet(name: &str) -> String {\n    format!(\"Hello, {name}!\")\n}").unwrap();
-    
+
     // Create a subdirectory
     let src_dir = tmp.path().join("src");
     fs::create_dir(&src_dir).unwrap();
     fs::write(src_dir.join("utils.rs"), "pub fn helper() -> i32 {\n    42\n}").unwrap();
-    
+
     // Create a markdown file with frontmatter
     fs::write(tmp.path().join("notes.md"), r#"---
 title: My Notes
@@ -51,7 +51,7 @@ fn test_cli_help() {
         .arg("--help")
         .output()
         .expect("Failed to run binary");
-    
+
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
     assert!(stdout.contains("knowledge-index"));
@@ -65,7 +65,7 @@ fn test_cli_version() {
         .arg("--version")
         .output()
         .expect("Failed to run binary");
-    
+
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
     assert!(stdout.contains("knowledge-index"));
@@ -77,7 +77,7 @@ fn test_cli_config_show() {
         .arg("config")
         .output()
         .expect("Failed to run binary");
-    
+
     // Config should work (might be first run)
     assert!(output.status.success() || output.status.code() == Some(0));
 }
@@ -89,7 +89,7 @@ fn test_cli_list_empty() {
         .arg("--json")
         .output()
         .expect("Failed to run binary");
-    
+
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
     assert!(stdout.contains("repositories") || stdout.contains("[]"));
@@ -101,7 +101,7 @@ fn test_cli_search_no_results() {
         .args(["search", "nonexistent_term_12345", "--json"])
         .output()
         .expect("Failed to run binary");
-    
+
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
     // Should return empty results
@@ -113,38 +113,38 @@ fn test_cli_search_no_results() {
 fn test_full_index_search_cycle() {
     let test_dir = create_test_repo();
     let test_path = test_dir.path().to_string_lossy().to_string();
-    
+
     // Index the test directory
     let output = Command::new(binary_path())
         .args(["index", &test_path, "--quiet"])
         .output()
         .expect("Failed to run index");
-    
+
     assert!(output.status.success(), "Index failed: {:?}", String::from_utf8_lossy(&output.stderr));
-    
+
     // Search for known content
     let output = Command::new(binary_path())
         .args(["search", "greet", "--json"])
         .output()
         .expect("Failed to run search");
-    
+
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
     assert!(stdout.contains("lib.rs") || stdout.contains("greet"));
-    
+
     // Search for markdown content
     let output = Command::new(binary_path())
         .args(["search", "wiki-link", "--json"])
         .output()
         .expect("Failed to run search");
-    
+
     assert!(output.status.success());
-    
+
     // Clean up - remove the indexed repo
     let output = Command::new(binary_path())
         .args(["remove", &test_path, "--force"])
         .output()
         .expect("Failed to run remove");
-    
+
     assert!(output.status.success());
 }

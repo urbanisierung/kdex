@@ -103,7 +103,7 @@ pub fn run(repo_filter: Option<String>, args: &Args) -> Result<()> {
         // Get files for this repository
         let files = db.get_repository_files(repo.id)?;
         let file_count = files.len();
-        
+
         if !args.quiet {
             if colors {
                 println!("{} Processing {} ({} files)...", "→".blue(), repo.name.cyan(), file_count);
@@ -111,12 +111,12 @@ pub fn run(repo_filter: Option<String>, args: &Args) -> Result<()> {
                 println!("Processing {} ({} files)...", repo.name, file_count);
             }
         }
-        
+
         let mut processed = 0;
-        
+
         for file in &files {
             processed += 1;
-            
+
             // Show progress every 10 files or at the end
             if !args.quiet && (processed % 10 == 0 || processed == file_count) {
                 if colors {
@@ -126,7 +126,7 @@ pub fn run(repo_filter: Option<String>, args: &Args) -> Result<()> {
                 }
                 io::stdout().flush().ok();
             }
-            
+
             // Read file content
             let full_path = repo.path.join(&file.relative_path);
             let Ok(content) = std::fs::read_to_string(&full_path) else {
@@ -159,7 +159,7 @@ pub fn run(repo_filter: Option<String>, args: &Args) -> Result<()> {
                 }
             }
         }
-        
+
         // Clear the progress line
         if !args.quiet && file_count > 0 {
             print!("\r                                                  \r");

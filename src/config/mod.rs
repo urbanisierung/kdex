@@ -136,7 +136,7 @@ mod tests {
     fn test_max_file_size_bytes() {
         let config = Config::default();
         assert_eq!(config.max_file_size_bytes(), 10 * 1024 * 1024);
-        
+
         let mut config = Config::default();
         config.max_file_size_mb = 5;
         assert_eq!(config.max_file_size_bytes(), 5 * 1024 * 1024);
@@ -148,7 +148,7 @@ mod tests {
         let toml_str = toml::to_string_pretty(&config).unwrap();
         assert!(toml_str.contains("max_file_size_mb"));
         assert!(toml_str.contains("ignore_patterns"));
-        
+
         // Round-trip
         let parsed: Config = toml::from_str(&toml_str).unwrap();
         assert_eq!(parsed.max_file_size_mb, config.max_file_size_mb);

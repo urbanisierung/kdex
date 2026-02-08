@@ -23,7 +23,7 @@ pub fn run(
     if all {
         // Update all repositories
         let repos = db.list_repositories()?;
-        
+
         if repos.is_empty() {
             if !args.quiet && !args.json {
                 print_warning("No repositories indexed. Use 'index' command first.", colors);
@@ -43,7 +43,7 @@ pub fn run(
             }
 
             let indexer = Indexer::new(db.clone(), config.clone());
-            
+
             match indexer.index(&repo.path, None, |_| {}) {
                 Ok(result) => {
                     results.push(serde_json::json!({

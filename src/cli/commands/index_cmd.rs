@@ -62,7 +62,7 @@ pub fn run(path: &Path, name: Option<String>, args: &Args) -> Result<()> {
         if let Some(pb) = &progress_bar {
             pb.set_length(progress.total_files as u64);
             pb.set_position(progress.processed_files as u64);
-            
+
             // Truncate filename for display
             let display_file = if progress.current_file.len() > 40 {
                 format!("...{}", &progress.current_file[progress.current_file.len() - 37..])
@@ -95,7 +95,7 @@ pub fn run(path: &Path, name: Option<String>, args: &Args) -> Result<()> {
         );
     } else if !args.quiet {
         let total_files = result.files_added + result.files_updated + result.files_unchanged;
-        
+
         if colors {
             print_success(
                 &format!(

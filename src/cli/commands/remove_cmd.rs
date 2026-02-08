@@ -24,7 +24,7 @@ pub fn run(path: &Path, force: bool, args: &Args) -> Result<()> {
             "Remove \"{}\" from index? ({} files will be removed from the index)",
             repo.name, repo.file_count
         );
-        
+
         if !confirm(&prompt) {
             if !args.quiet {
                 println!("Cancelled.");

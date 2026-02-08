@@ -25,11 +25,11 @@ pub fn check_inotify_limit(estimated_directories: usize) -> PlatformLimits {
     #[cfg(target_os = "linux")]
     {
         let limit = read_inotify_max_user_watches();
-        
+
         // Estimate: each directory needs at least one watch.
         // Add 20% buffer for safety.
         let needed = (estimated_directories as f64 * 1.2) as u64;
-        
+
         if let Some(max_watches) = limit {
             if needed > max_watches {
                 return PlatformLimits {
@@ -43,7 +43,7 @@ pub fn check_inotify_limit(estimated_directories: usize) -> PlatformLimits {
                     )),
                 };
             }
-            
+
             // Warn if approaching limit (> 80%)
             if needed > (max_watches as f64 * 0.8) as u64 {
                 return PlatformLimits {
@@ -55,14 +55,14 @@ pub fn check_inotify_limit(estimated_directories: usize) -> PlatformLimits {
                     )),
                 };
             }
-            
+
             return PlatformLimits {
                 current_limit: Some(max_watches),
                 may_be_insufficient: false,
                 warning: None,
             };
         }
-        
+
         // Couldn't read limit, assume it's fine
         PlatformLimits {
             current_limit: None,
@@ -70,7 +70,7 @@ pub fn check_inotify_limit(estimated_directories: usize) -> PlatformLimits {
             warning: None,
         }
     }
-    
+
     #[cfg(not(target_os = "linux"))]
     {
         let _ = estimated_directories;
@@ -108,10 +108,10 @@ fn count_directories_recursive(
         *count += 10;
         return Ok(());
     }
-    
+
     if path.is_dir() {
         *count += 1;
-        
+
         // Skip common large/unimportant directories
         let name = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
         if matches!(name, "node_modules" | ".git" | "target" | "build" | "dist" | ".cache") {
@@ -119,7 +119,7 @@ fn count_directories_recursive(
             *count += 50;
             return Ok(());
         }
-        
+
         for entry in std::fs::read_dir(path)? {
             let entry = entry?;
             let entry_path = entry.path();
@@ -128,21 +128,21 @@ fn count_directories_recursive(
             }
         }
     }
-    
+
     Ok(())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_check_inotify_limit_small_count() {
         let result = check_inotify_limit(10);
         // Should not warn for small counts
         assert!(!result.may_be_insufficient);
     }
-    
+
     #[test]
     fn test_estimate_directory_count() {
         // Test with temp dir
