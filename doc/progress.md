@@ -4,6 +4,26 @@
 
 ### 2026-02-08
 
+- **Implemented Medium Priority Optional Features**
+  - TUI Preview Pane
+    - Toggle with 'p' key in Search view
+    - Shows file content with line numbers
+    - Scroll with j/k in preview mode
+    - Horizontal split: 40% results, 60% preview
+  - Loading State Overlay
+    - Animated spinner during operations
+    - Centered overlay with message
+    - Loading state management in App
+  - Delete Confirmation Dialog
+    - Modal dialog before repository deletion
+    - Press 'y' to confirm, 'n'/Esc to cancel
+    - Confirmation action system in App
+  - Platform Limits Check
+    - Linux inotify watch limit detection
+    - Warns before starting file watcher
+    - Estimates directory count for watched repos
+    - Instructions for increasing limits
+
 - **Implemented Priority Optional Features**
   - Added `--group-by-repo` flag to search command
     - Groups search results by repository in both CLI and JSON output

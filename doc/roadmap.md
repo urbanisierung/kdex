@@ -613,7 +613,7 @@ Build the interactive TUI using `ratatui` with `crossterm` backend.
   - Show file path, repo name, snippet preview
   - Highlight selected row
   - Arrow keys to navigate, Enter to preview full file
-- [ ] *(Optional)* Preview pane (horizontal split when result selected):
+- [x] *(Optional)* Preview pane (horizontal split when result selected):
   - Show file content with search term highlighted
   - Scroll with j/k or arrow keys
   - Show line numbers
@@ -719,7 +719,7 @@ Define helpful messages when no data exists:
 
 **Note:** Progress bars are shown during CLI indexing. TUI spinners are optional enhancements.
 
-- [ ] *(Optional)* Show spinner during operations:
+- [x] *(Optional)* Show spinner during operations:
   - Searching (if >100ms)
   - Indexing
   - Updating
@@ -744,7 +744,7 @@ Define helpful messages when no data exists:
 
 **Note:** Delete confirmation exists in CLI (`--force` flag). TUI modal dialogs are optional.
 
-- [ ] *(Optional)* Delete repository confirmation:
+- [x] *(Optional)* Delete repository confirmation:
   ```
   ┌─────────────────────────────────────────┐
   │  Remove "my-project" from index?        │
@@ -755,8 +755,8 @@ Define helpful messages when no data exists:
   │  [Y]es    [N]o                          │
   └─────────────────────────────────────────┘
   ```
-- [ ] *(Optional)* Use consistent pattern: show options, highlight default
-- [ ] *(Optional)* Support both lowercase and uppercase for confirmation keys
+- [x] *(Optional)* Use consistent pattern: show options, highlight default
+- [x] *(Optional)* Support both lowercase and uppercase for confirmation keys
 
 ### Part 4.12: Keyboard Navigation Principles
 
@@ -1028,7 +1028,7 @@ Implement filesystem monitoring for automatic index updates.
   }
   ```
 - [x] Implement debouncing: collect events for 500ms before processing
-- [ ] *(Optional)* Handle platform limits:
+- [x] Handle platform limits:
   - Linux: check `max_user_watches`, log warning if too low
   - macOS: FSEvents has no practical limit
   - Windows: ReadDirectoryChangesW works per-directory

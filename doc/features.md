@@ -37,9 +37,12 @@ This document tracks all features of the knowledge-index CLI application.
 | **Rebuild Embeddings** | `rebuild-embeddings` command for regeneration | 2026-02-08 |
 | **Watch Command** | `watch` command for live file monitoring | 2026-02-08 |
 | **Embedding Progress** | Progress indicator during embedding generation | 2026-02-08 |
+| **TUI Preview Pane** | Show file content preview for selected search result | 2026-02-08 |
+| **TUI Loading States** | Animated spinner overlay during operations | 2026-02-08 |
+| **Delete Confirmation** | Confirmation dialog before repo deletion | 2026-02-08 |
+| **Platform Limits Check** | Warn about Linux inotify limits before watching | 2026-02-08 |
 
 ## Planned Features
 
 - Background file watching (TUI integration)
-- Preview pane in TUI
 - Remote sync capabilities

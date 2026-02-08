@@ -60,7 +60,7 @@ fn run_command(cmd: Commands, args: &Args) -> Result<()> {
 }
 
 fn run_watcher(all: bool, path: Option<std::path::PathBuf>, args: &Args) -> Result<()> {
-    use crate::core::IndexWatcher;
+    use crate::core::{check_inotify_limit, estimate_directory_count, IndexWatcher};
     use std::sync::Arc;
     use std::thread;
     use std::time::Duration;
@@ -89,6 +89,20 @@ fn run_watcher(all: bool, path: Option<std::path::PathBuf>, args: &Args) -> Resu
             eprintln!("No repositories to watch. Index a directory first.");
         }
         return Ok(());
+    }
+    
+    // Check platform limits (Linux inotify)
+    if !args.quiet {
+        let total_dirs: usize = repos
+            .iter()
+            .filter_map(|r| estimate_directory_count(&r.path).ok())
+            .sum();
+        
+        let limits = check_inotify_limit(total_dirs);
+        if let Some(warning) = limits.warning {
+            eprintln!("{warning}");
+            eprintln!();
+        }
     }
     
     if !args.quiet {
