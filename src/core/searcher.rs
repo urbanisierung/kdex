@@ -250,3 +250,53 @@ impl Searcher {
         result
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_search_mode_from_str() {
+        assert_eq!(SearchMode::from_str("lexical"), SearchMode::Lexical);
+        assert_eq!(SearchMode::from_str("semantic"), SearchMode::Semantic);
+        assert_eq!(SearchMode::from_str("vector"), SearchMode::Semantic);
+        assert_eq!(SearchMode::from_str("hybrid"), SearchMode::Hybrid);
+        assert_eq!(SearchMode::from_str("combined"), SearchMode::Hybrid);
+        assert_eq!(SearchMode::from_str("unknown"), SearchMode::Lexical);
+        assert_eq!(SearchMode::from_str("SEMANTIC"), SearchMode::Semantic);
+    }
+
+    #[test]
+    fn test_search_mode_as_str() {
+        assert_eq!(SearchMode::Lexical.as_str(), "lexical");
+        assert_eq!(SearchMode::Semantic.as_str(), "semantic");
+        assert_eq!(SearchMode::Hybrid.as_str(), "hybrid");
+    }
+
+    #[test]
+    fn test_escape_fts_query_simple() {
+        assert_eq!(Searcher::escape_fts_query("hello"), "hello");
+        assert_eq!(Searcher::escape_fts_query("hello world"), "hello world");
+    }
+
+    #[test]
+    fn test_escape_fts_query_quoted() {
+        // Quoted phrases should be preserved
+        assert_eq!(Searcher::escape_fts_query("\"exact phrase\""), "\"exact phrase\"");
+    }
+
+    #[test]
+    fn test_escape_fts_query_special_chars() {
+        // Special chars should be replaced with spaces
+        assert_eq!(Searcher::escape_fts_query("fn()"), "fn  ");
+        assert_eq!(Searcher::escape_fts_query("class::method"), "class  method");
+        assert_eq!(Searcher::escape_fts_query("a-b"), "a b");
+    }
+
+    #[test]
+    fn test_escape_fts_query_wildcard() {
+        // Wildcard (*) should be preserved
+        assert_eq!(Searcher::escape_fts_query("func*"), "func*");
+        assert_eq!(Searcher::escape_fts_query("*pattern"), "*pattern");
+    }
+}

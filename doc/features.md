@@ -46,6 +46,10 @@ This document tracks all features of the knowledge-index CLI application.
 | **Shell Aliases** | Suggested shell aliases in --help output | 2026-02-08 |
 | **Markdown Syntax Stripping** | Config option to strip markdown for cleaner FTS | 2026-02-08 |
 | **Code Block Indexing** | Config option to index code blocks with language tags | 2026-02-08 |
+| **CI Pipeline** | GitHub Actions for testing on Linux/macOS/Windows | 2026-02-08 |
+| **Release Automation** | Cross-platform binary builds and GitHub releases | 2026-02-08 |
+| **Unit Tests** | 18 unit tests covering config, search, and markdown | 2026-02-08 |
+| **Integration Tests** | CLI command tests for help, version, config, search | 2026-02-08 |
 
 ## Planned Features
 
