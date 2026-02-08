@@ -2,7 +2,7 @@
 name = "knowledge-index"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.75"
+rust-version = "1.85"
 description = "A CLI application for indexing and searching code repositories and knowledge bases for AI-powered workflows"
 authors = ["urbanisierung"]
 license = "MIT"

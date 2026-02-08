@@ -4,9 +4,15 @@
 
 ### 2026-02-08
 
+- **Fixed CI Pipeline Issues**
+  - Updated MSRV from 1.75 to 1.85 (required for edition2024 in ort-sys dependency)
+  - Fixed `cargo fmt` check syntax in CI workflow
+  - Updated Cargo.toml rust-version to 1.85
+  - Updated CI workflow MSRV job to use dtolnay/rust-toolchain@1.85.0
+
 - **Implemented Phase 10: Polish and Release**
   - Cargo.toml Metadata
-    - Added rust-version (MSRV 1.75)
+    - Added rust-version (MSRV 1.85)
     - Added homepage, documentation URLs
     - Added exclude patterns for packaging
     - Added text-processing category
@@ -21,7 +27,7 @@
   - CI Pipeline (.github/workflows/ci.yml)
     - Multi-platform testing (Linux, macOS, Windows)
     - Rust stable and beta channels
-    - MSRV check (1.75)
+    - MSRV check (1.85)
     - Format check, clippy lints, doc tests
     - Publish dry-run verification
   - Release Workflow (.github/workflows/release.yml)
