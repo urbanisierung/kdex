@@ -64,6 +64,11 @@ impl Default for Config {
 impl Config {
     /// Get the configuration directory path for the current OS
     pub fn config_dir() -> Result<PathBuf> {
+        // Allow override via environment variable (useful for testing)
+        if let Ok(dir) = std::env::var("KNOWLEDGE_INDEX_CONFIG_DIR") {
+            return Ok(PathBuf::from(dir));
+        }
+
         dirs::config_dir()
             .map(|p| p.join(APP_NAME))
             .ok_or_else(|| AppError::Config("Could not determine config directory".into()))

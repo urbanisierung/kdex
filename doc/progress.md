@@ -4,6 +4,12 @@
 
 ### 2026-02-09
 
+- **Fixed CI Test Isolation Issues**
+  - Added `KNOWLEDGE_INDEX_CONFIG_DIR` environment variable support for custom config directory
+  - Updated all integration tests to use isolated temporary directories
+  - Prevents test interference and CI environment differences from causing failures
+  - Each test now runs with its own fresh database/config
+
 - **Added Local CI Scripts (Makefile)**
   - Created `Makefile` with Docker-based CI commands
   - `make ci` runs full CI pipeline matching GitHub Actions
