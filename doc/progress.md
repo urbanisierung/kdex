@@ -10,8 +10,15 @@
   - `make ci-quick` runs format and clippy checks only
   - `make ci-msrv` checks minimum supported Rust version (1.88)
   - Individual steps: `make ci-format`, `make ci-clippy`, `make ci-test`, `make ci-doc`
+  - `make ci-test-verbose` for debugging test failures with output
   - Local development commands: `make build`, `make release`, `make test`, `make fmt`, `make lint`
   - Updated README.md with development section
+  - Updated copilot-instructions.md with CI verification requirements
+
+- **Fixed Integration Test Issues**
+  - Improved test error messages to include stderr output for debugging
+  - Added Windows `.exe` extension handling in binary path detection
+  - Tests now show actual error message when commands fail
 
 - **Fixed Additional CI Issues**
   - Updated MSRV to 1.88 (required by darling, ort-sys dependencies)

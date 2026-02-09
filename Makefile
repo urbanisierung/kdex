@@ -1,7 +1,7 @@
 # Makefile for knowledge-index
 # Run CI checks locally using Docker to match GitHub Actions environment
 
-.PHONY: help ci ci-quick ci-msrv ci-format ci-clippy ci-test ci-doc ci-publish-check build release clean
+.PHONY: help ci ci-quick ci-msrv ci-format ci-clippy ci-test ci-test-verbose ci-doc ci-publish-check build release clean
 
 # Default target
 help:
@@ -14,6 +14,7 @@ help:
 	@echo "  make ci-format       - Check code formatting"
 	@echo "  make ci-clippy       - Run clippy lints"
 	@echo "  make ci-test         - Run all tests"
+	@echo "  make ci-test-verbose - Run all tests with output (for debugging)"
 	@echo "  make ci-doc          - Build documentation with warnings as errors"
 	@echo "  make ci-publish-check - Dry-run crates.io publish"
 	@echo ""
@@ -105,6 +106,12 @@ ci-clippy:
 ci-test:
 	@echo "🔄 Running tests in Docker..."
 	docker run --rm -v $(PWD):/app -w /app rust:latest cargo test --all-features
+	@echo "✅ Tests OK"
+
+# Tests with verbose output (for debugging)
+ci-test-verbose:
+	@echo "🔄 Running tests in Docker (verbose)..."
+	docker run --rm -v $(PWD):/app -w /app rust:latest cargo test --all-features -- --nocapture
 	@echo "✅ Tests OK"
 
 # Documentation build

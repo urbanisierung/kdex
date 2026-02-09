@@ -10,6 +10,13 @@ fn binary_path() -> PathBuf {
     path.pop(); // Remove test binary name
     path.pop(); // Remove 'deps'
     path.push("knowledge-index");
+
+    // On Windows, add .exe extension
+    #[cfg(windows)]
+    {
+        path.set_extension("exe");
+    }
+
     path
 }
 
@@ -110,7 +117,18 @@ fn test_cli_list_empty() {
         .output()
         .expect("Failed to run binary");
 
-    assert!(output.status.success());
+    // Print stderr for debugging if the command fails
+    if !output.status.success() {
+        eprintln!(
+            "Command failed with stderr: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
+    assert!(
+        output.status.success(),
+        "list --json failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
     let stdout = String::from_utf8_lossy(&output.stdout);
     assert!(stdout.contains("repositories") || stdout.contains("[]"));
 }
@@ -122,7 +140,18 @@ fn test_cli_search_no_results() {
         .output()
         .expect("Failed to run binary");
 
-    assert!(output.status.success());
+    // Print stderr for debugging if the command fails
+    if !output.status.success() {
+        eprintln!(
+            "Command failed with stderr: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
+    assert!(
+        output.status.success(),
+        "search --json failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
     let stdout = String::from_utf8_lossy(&output.stdout);
     // Should return empty results
     assert!(stdout.contains("results") || stdout.contains("[]"));
