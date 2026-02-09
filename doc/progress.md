@@ -4,6 +4,12 @@
 
 ### 2026-02-09
 
+- **Enhanced MCP Server Startup**
+  - MCP server now prints helpful startup banner with available tools
+  - Shows integration snippets for GitHub Copilot CLI and Claude Desktop
+  - Displays config file paths for easy setup
+  - Colorized output for better readability
+
 - **Fixed TUI Keyboard Shortcuts**
   - Changed shortcuts to use Ctrl combinations to avoid conflicts with search input
   - `Ctrl+Q` - Quit (works while typing)
