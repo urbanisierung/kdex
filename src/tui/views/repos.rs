@@ -29,7 +29,7 @@ fn render_empty(frame: &mut Frame, area: Rect) {
         )),
         Line::from(""),
         Line::from(Span::styled(
-            "  knowledge-index index /path/to/project",
+            "  kdex index /path/to/project",
             Style::default().fg(Color::Cyan),
         )),
     ];
@@ -60,7 +60,10 @@ fn render_list(frame: &mut Frame, app: &App, area: Rect) {
             let status_icon = match repo.status {
                 RepoStatus::Ready => Span::styled("●", Style::default().fg(Color::Green)),
                 RepoStatus::Pending => Span::styled("○", Style::default().fg(Color::Yellow)),
-                RepoStatus::Indexing => Span::styled("◐", Style::default().fg(Color::Cyan)),
+                RepoStatus::Indexing | RepoStatus::Syncing => {
+                    Span::styled("◐", Style::default().fg(Color::Cyan))
+                }
+                RepoStatus::Cloning => Span::styled("↓", Style::default().fg(Color::Cyan)),
                 RepoStatus::Error => Span::styled("!", Style::default().fg(Color::Red)),
             };
 

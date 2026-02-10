@@ -1,11 +1,11 @@
-# Makefile for knowledge-index
+# Makefile for kdex
 # Run CI checks locally using Docker to match GitHub Actions environment
 
 .PHONY: help ci ci-quick ci-msrv ci-format ci-clippy ci-test ci-test-verbose ci-doc ci-publish-check build release clean
 
 # Default target
 help:
-	@echo "knowledge-index development commands"
+	@echo "kdex development commands"
 	@echo ""
 	@echo "CI Commands (Docker-based, matches GitHub Actions):"
 	@echo "  make ci              - Run full CI pipeline (format, clippy, build, test, doc)"

@@ -3,23 +3,24 @@ use std::path::PathBuf;
 
 #[derive(Parser)]
 #[command(
-    name = "knowledge-index",
+    name = "kdex",
     about = "Index and search code repositories and knowledge bases for AI-powered workflows",
     version,
     author
 )]
 #[command(after_help = "Examples:
-  knowledge-index                     Launch interactive TUI
-  knowledge-index index .             Index current directory
-  knowledge-index index ~/notes       Index Obsidian vault
-  knowledge-index search \"async fn\"   Search for async functions
-  knowledge-index search \"TODO\" --type markdown
-  knowledge-index list                List all indexed repositories
+  kdex                     Launch interactive TUI
+  kdex index .             Index current directory
+  kdex index ~/notes       Index Obsidian vault
+  kdex add --remote owner/repo   Add remote GitHub repo
+  kdex search \"async fn\"   Search for async functions
+  kdex search \"TODO\" --type markdown
+  kdex list                List all indexed repositories
 
 Shell Aliases (add to ~/.bashrc or ~/.zshrc):
-  alias ki='knowledge-index'
-  alias kis='knowledge-index search'
-  alias kii='knowledge-index index .'
+  alias ki='kdex'
+  alias kis='kdex search'
+  alias kii='kdex index .'
 ")]
 #[allow(clippy::struct_excessive_bools)]
 pub struct Args {
@@ -51,9 +52,9 @@ pub struct Args {
 pub enum Commands {
     /// Index a directory (code repository or knowledge base)
     #[command(after_help = "Examples:
-  knowledge-index index                    Index current directory
-  knowledge-index index ~/projects/myapp   Index specific project
-  knowledge-index index ~/Documents/notes  Index Obsidian vault
+  kdex index                    Index current directory
+  kdex index ~/projects/myapp   Index specific project
+  kdex index ~/Documents/notes  Index Obsidian vault
 ")]
     Index {
         /// Directory to index (defaults to current directory)
@@ -65,13 +66,42 @@ pub enum Commands {
         name: Option<String>,
     },
 
+    /// Add a repository (local or remote GitHub)
+    #[command(after_help = "Examples:
+  kdex add .                      Add local directory
+  kdex add --remote owner/repo    Add GitHub repo by shorthand
+  kdex add --remote https://github.com/owner/repo
+  kdex add --remote owner/repo --branch develop
+  kdex add --remote owner/repo --shallow
+")]
+    Add {
+        /// Local directory path (when not using --remote)
+        path: Option<PathBuf>,
+
+        /// Add a remote GitHub repository
+        #[arg(long, short)]
+        remote: Option<String>,
+
+        /// Branch to clone (for remote repos)
+        #[arg(long)]
+        branch: Option<String>,
+
+        /// Use shallow clone (faster, less disk space)
+        #[arg(long)]
+        shallow: bool,
+
+        /// Custom name for the repository
+        #[arg(long)]
+        name: Option<String>,
+    },
+
     /// Search indexed content
     #[command(after_help = "Examples:
-  knowledge-index search \"database connection\"
-  knowledge-index search \"async fn\" --repo api-service
-  knowledge-index search \"TODO\" --type markdown
-  knowledge-index search \"error handling\" --semantic
-  knowledge-index search \"authentication\" --hybrid
+  kdex search \"database connection\"
+  kdex search \"async fn\" --repo api-service
+  kdex search \"TODO\" --type markdown
+  kdex search \"error handling\" --semantic
+  kdex search \"authentication\" --hybrid
 ")]
     Search {
         /// Search query (supports phrases and wildcards)
@@ -108,8 +138,8 @@ pub enum Commands {
 
     /// Update an existing index
     #[command(after_help = "Examples:
-  knowledge-index update .            Update current directory
-  knowledge-index update --all        Update all repositories
+  kdex update .            Update current directory
+  kdex update --all        Update all repositories
 ")]
     Update {
         /// Repository path to update
@@ -120,13 +150,27 @@ pub enum Commands {
         all: bool,
     },
 
+    /// Sync remote repositories with their origins
+    #[command(after_help = "Examples:
+  kdex sync                Sync all remote repositories
+  kdex sync owner/repo     Sync specific remote repository
+")]
+    Sync {
+        /// Specific repository to sync (by name or path)
+        repo: Option<String>,
+
+        /// Skip re-indexing after sync
+        #[arg(long)]
+        no_index: bool,
+    },
+
     /// List all indexed repositories
     List {},
 
     /// Remove a repository from the index
     #[command(after_help = "Examples:
-  knowledge-index remove ~/projects/old-project
-  knowledge-index remove . --force    Skip confirmation
+  kdex remove ~/projects/old-project
+  kdex remove . --force    Skip confirmation
 ")]
     Remove {
         /// Repository path to remove
@@ -139,7 +183,10 @@ pub enum Commands {
 
     /// Show or edit configuration
     Config {
-        /// Configuration key to show/set
+        #[command(subcommand)]
+        action: Option<ConfigAction>,
+
+        /// Configuration key to show/set (legacy, use subcommands instead)
         key: Option<String>,
 
         /// Value to set
@@ -165,12 +212,61 @@ pub enum Commands {
 
     /// Rebuild embeddings for semantic search
     #[command(after_help = "Examples:
-  knowledge-index rebuild-embeddings         Rebuild all embeddings
-  knowledge-index rebuild-embeddings --repo myproject
+  kdex rebuild-embeddings         Rebuild all embeddings
+  kdex rebuild-embeddings --repo myproject
 ")]
     RebuildEmbeddings {
         /// Filter by repository name
         #[arg(long)]
         repo: Option<String>,
+    },
+}
+
+#[derive(Subcommand, Clone)]
+pub enum ConfigAction {
+    /// Show current configuration
+    Show,
+
+    /// Export configuration to file (for backup/migration)
+    #[command(after_help = "Examples:
+  kdex config export                     Export to stdout
+  kdex config export -o kdex-config.yaml Export to file
+  kdex config export --remotes-only      Only remote repos (portable)
+")]
+    Export {
+        /// Output file (default: stdout)
+        #[arg(long, short)]
+        output: Option<PathBuf>,
+
+        /// Only export remote repositories (portable)
+        #[arg(long)]
+        remotes_only: bool,
+
+        /// Include local repositories (with path warning)
+        #[arg(long)]
+        include_local: bool,
+
+        /// Output format
+        #[arg(long, default_value = "yaml")]
+        format: String,
+    },
+
+    /// Import configuration from file
+    #[command(after_help = "Examples:
+  kdex config import kdex-config.yaml
+  kdex config import kdex-config.yaml --merge
+  cat config.yaml | kdex config import -
+")]
+    Import {
+        /// Input file (use '-' for stdin)
+        file: PathBuf,
+
+        /// Merge with existing config instead of replacing
+        #[arg(long)]
+        merge: bool,
+
+        /// Skip cloning remote repositories
+        #[arg(long)]
+        skip_clone: bool,
     },
 }

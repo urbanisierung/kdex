@@ -4,7 +4,8 @@ use std::path::PathBuf;
 
 use crate::error::{AppError, Result};
 
-pub const APP_NAME: &str = "knowledge-index";
+pub const APP_NAME: &str = "kdex";
+pub const LEGACY_APP_NAME: &str = "knowledge-index";
 #[allow(dead_code)]
 pub const APP_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const CONFIG_FILE_NAME: &str = "config.toml";
@@ -62,16 +63,47 @@ impl Default for Config {
 }
 
 impl Config {
-    /// Get the configuration directory path for the current OS
+    /// Get the configuration directory path for the current OS.
+    /// Supports migration from legacy "knowledge-index" directory to "kdex".
     pub fn config_dir() -> Result<PathBuf> {
         // Allow override via environment variable (useful for testing)
+        if let Ok(dir) = std::env::var("KDEX_CONFIG_DIR") {
+            return Ok(PathBuf::from(dir));
+        }
+        // Also support legacy env var
         if let Ok(dir) = std::env::var("KNOWLEDGE_INDEX_CONFIG_DIR") {
             return Ok(PathBuf::from(dir));
         }
 
-        dirs::config_dir()
-            .map(|p| p.join(APP_NAME))
-            .ok_or_else(|| AppError::Config("Could not determine config directory".into()))
+        let base_dir = dirs::config_dir()
+            .ok_or_else(|| AppError::Config("Could not determine config directory".into()))?;
+
+        let new_path = base_dir.join(APP_NAME);
+        let legacy_path = base_dir.join(LEGACY_APP_NAME);
+
+        // If new path exists, use it
+        if new_path.exists() {
+            return Ok(new_path);
+        }
+
+        // If legacy path exists, migrate it
+        if legacy_path.exists() {
+            eprintln!(
+                "Migrating config from '{}' to '{}'...",
+                legacy_path.display(),
+                new_path.display()
+            );
+            if let Err(e) = fs::rename(&legacy_path, &new_path) {
+                eprintln!("Warning: Could not migrate config directory: {e}");
+                eprintln!("Using legacy path: {}", legacy_path.display());
+                return Ok(legacy_path);
+            }
+            eprintln!("Migration complete.");
+            return Ok(new_path);
+        }
+
+        // Neither exists, use new path
+        Ok(new_path)
     }
 
     /// Get the path to the config file

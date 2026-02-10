@@ -1,14 +1,14 @@
 [package]
-name = "knowledge-index"
+name = "kdex"
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.88"
-description = "A CLI application for indexing and searching code repositories and knowledge bases for AI-powered workflows"
+description = "A fast CLI for indexing and searching code repositories and knowledge bases for AI-powered workflows"
 authors = ["urbanisierung"]
 license = "MIT"
-repository = "https://github.com/urbanisierung/knowledge-index"
-homepage = "https://github.com/urbanisierung/knowledge-index"
-documentation = "https://github.com/urbanisierung/knowledge-index/blob/main/doc/documentation.md"
+repository = "https://github.com/urbanisierung/kdex"
+homepage = "https://github.com/urbanisierung/kdex"
+documentation = "https://github.com/urbanisierung/kdex/blob/main/doc/documentation.md"
 readme = "README.md"
 keywords = ["cli", "search", "index", "knowledge", "ai"]
 categories = ["command-line-utilities", "development-tools", "text-processing"]
@@ -17,6 +17,10 @@ exclude = [
     "target/",
     "*.db",
 ]
+
+[[bin]]
+name = "kdex"
+path = "src/main.rs"
 
 [dependencies]
 # CLI
@@ -32,12 +36,16 @@ rusqlite = { version = "0.32", features = ["bundled", "modern_sqlite"] }
 # Embeddings (Vector Search)
 fastembed = "5"
 
+# Git operations
+git2 = "0.20"
+
 # Async
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "io-std"] }
 
 # Serialization
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+serde_yaml = "0.9"
 toml = "0.8"
 
 # File processing
@@ -58,6 +66,7 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 owo-colors = "4"
 indicatif = "0.17"
 atty = "0.2"
+url = "2"
 
 [dev-dependencies]
 tempfile = "3"

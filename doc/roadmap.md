@@ -1451,6 +1451,368 @@ Final quality improvements and release preparation.
 
 ---
 
+## Phase 11: Release Hardening & Marketing
+
+Final fixes for cross-platform builds, branding improvements, and promotional materials.
+
+**Goal:** Ensure all release builds work, establish memorable branding, and create demo materials for adoption.
+
+### Part 11.1: Cross-Platform Build Fixes
+
+The `ort` crate (ONNX Runtime) requires prebuilt binaries or manual compilation for certain targets.
+
+- [x] Investigate `x86_64-apple-darwin` build failure:
+  - Error: `ort-sys@2.0.0-rc.11: ort does not provide prebuilt binaries for target x86_64-apple-darwin`
+  - Options to investigate:
+    1. Check if newer `ort` version includes x86_64-apple-darwin binaries
+    2. Use `ort` feature flags to download binaries at build time
+    3. Compile ONNX Runtime from source for this target
+    4. Make semantic search optional at compile time (feature flag)
+- [x] Remove `x86_64-apple-darwin` from release from release workflow
+  - Apple Silicon (`aarch64-apple-darwin`) build is working
+  - x86_64 macOS is legacy (last Intel Mac shipped 2021)
+  - Document that Intel Mac users should build from source
+- [x] Verify all other release targets still build:
+  - `x86_64-unknown-linux-gnu` ✓
+  - `aarch64-apple-darwin` ✓
+  - `x86_64-pc-windows-msvc` ✓
+
+### Part 11.2: CLI Branding & Naming
+
+Current name `knowledge-index` is descriptive but verbose. A shorter, memorable name improves adoption.
+
+- [x] Brainstorm short name candidates (requirements: short, topic-relevant, available):
+  - `kix` — Knowledge IndeX (3 chars, memorable)
+  - `dex` — Developer EXplorer / Document inDEX
+  - `hive` — Central knowledge storage metaphor
+  - `lore` — Accumulated knowledge/wisdom
+  - `tome` — Book of knowledge
+  - `seek` — Search action verb
+  - `qry` — Query (phonetic)
+  - `ctx` — Context (for AI context building)
+  - `skim` — Quick search metaphor
+  - `ix` — Index abbreviation (2 chars)
+- [x] Check name availability - chose kdex:
+  - crates.io namespace
+  - GitHub organization/repo
+  - Homebrew formula names
+  - Common package manager conflicts
+- [x] Evaluate top candidates:
+  - Pronounceability
+  - Memorability
+  - Typing ease (no special chars, easy on QWERTY)
+  - Association with purpose
+- [x] Renamed to kdex with migration:
+  - `Cargo.toml` package name and binary name
+  - Config directory name (with migration path)
+  - Documentation and README
+  - MCP server identification
+
+### Part 11.3: Demo & Promotional Materials
+
+Create visual demonstrations for README, social media, and documentation.
+
+- [x] Create asciinema recording script (`scripts/demo.sh`):
+  - Show indexing a sample repository
+  - Demonstrate TUI navigation and search
+  - Show preview panel functionality
+  - Demonstrate JSON output for scripting
+  - Show MCP server startup
+  - Keep recording under 60 seconds
+- [ ] Record and upload to asciinema.org
+- [ ] Embed in README.md with animated GIF fallback
+- [ ] Create static screenshots for documentation:
+  - TUI main search view
+  - Preview panel
+  - Repos management
+  - Help overlay
+
+### Part 11.4: Search Efficiency Audit
+
+Validate that common AI assistant use cases work efficiently with current schema.
+
+- [x] Test scenario: "How to kill a port" (user has documented this in markdown)
+  - Index a test vault with the answer documented
+  - Run search via CLI and MCP
+  - Measure: Does FTS5 find it with various phrasings?
+    - "kill port"
+    - "how to kill a port"
+    - "stop process on port"
+    - "port 3000 in use"
+  - Document results and any improvements needed
+- [x] Audit search relevance for common queries:
+  - Commands/how-tos (action-oriented)
+  - Code patterns (function signatures, imports)
+  - Concepts (explanations, definitions)
+  - Error messages (stack traces, error codes)
+- [ ] Consider schema improvements if needed:
+  - [ ] Add `document_type` field (code, markdown, config, etc.)
+  - [ ] Add `section_type` for markdown (heading, paragraph, code block)
+  - [ ] Index headings separately for better structure matching
+  - [ ] Consider TF-IDF or BM25 ranking adjustments
+- [ ] Ensure MCP `search` tool returns enough context:
+  - Snippets should include surrounding context
+  - File path and line numbers for precise location
+  - Score/relevance indicator for result ordering
+
+---
+
+## Phase 12: Marketing & Growth
+
+Create compelling marketing materials to drive adoption and communicate the value proposition clearly.
+
+**Goal:** Make kdex irresistible to developers and AI enthusiasts through engaging content and clear messaging.
+
+### Part 12.1: README Excellence ✅
+
+Research popular CLI tools and apply best practices to create an engaging README.
+
+- [x] Research top CLI README patterns:
+  - Study: `ripgrep`, `fd`, `bat`, `exa/eza`, `fzf`, `jq`, `httpie`
+  - Note: Hero section patterns, GIF demos, feature highlights
+  - Identify: What makes users want to try immediately?
+- [x] Improve README structure:
+  - [x] Add hero banner/logo (ASCII art or simple graphic)
+  - [x] Write compelling one-liner tagline
+  - [x] Add "Why kdex?" section with clear value props
+  - [x] Include animated terminal demo (asciinema embed or GIF)
+  - [x] Show before/after comparison (without kdex vs with kdex)
+  - [x] Add badges (CI, crates.io, license, downloads)
+  - [x] Simplify quickstart to 3 commands max
+  - [x] Add testimonials/use cases section
+- [x] Optimize for scanning:
+  - Bold key benefits
+  - Use emoji sparingly for visual anchors
+  - Keep paragraphs short (2-3 sentences max)
+  - Add "Table of Contents" for longer README
+
+### Part 12.2: Marketing Message & Positioning ✅
+
+Define clear positioning and value proposition for all marketing materials.
+
+- [x] Core value proposition:
+  - **Problem:** AI assistants lack context about YOUR code and notes
+  - **Solution:** kdex indexes everything locally, AI finds it instantly
+  - **Benefit:** Better AI answers, no cloud dependencies, works offline
+- [x] Key messaging pillars:
+  1. **Local-first:** Your data never leaves your machine
+  2. **AI-ready:** MCP integration for GitHub Copilot, Claude, Ollama
+  3. **Instant setup:** One command to index, one command to search
+  4. **Universal:** Code repos, Obsidian vaults, any markdown
+- [x] Target audiences:
+  - Developers using AI coding assistants
+  - Knowledge workers with Obsidian/Logseq vaults
+  - Privacy-conscious users avoiding cloud sync
+  - Teams wanting shared local knowledge bases
+- [x] Competitive positioning:
+  - vs cloud search: "Your data stays local"
+  - vs manual grep: "AI understands context, not just keywords"
+  - vs RAG pipelines: "No Python, no dependencies, just one binary"
+
+### Part 12.3: Local AI Integration (Ollama) ✅
+
+Add Ollama as a configuration example to reinforce the local-first message.
+
+- [x] Document Ollama + kdex workflow:
+  - How to use kdex as context source for Ollama
+  - Example: pipe search results to Ollama prompt
+  - MCP integration possibilities
+- [x] Add to documentation:
+  ```bash
+  # Search kdex, feed to Ollama
+  kdex search "authentication" --json | \
+    jq -r '.results[].snippet' | \
+    ollama run llama3 "Summarize this code context:"
+  ```
+- [x] Create `doc/ollama-integration.md`:
+  - Step-by-step setup guide
+  - Use cases: code review, documentation Q&A, debugging help
+  - Performance tips for local LLMs
+- [x] Update README with Ollama mention in AI integrations
+- [x] Add Ollama example to MCP documentation
+
+### Part 12.4: Landing Page ✅
+
+Create a minimal, fast, single-file landing page that sells the vision in 15 seconds.
+
+- [x] Design principles:
+  - Single HTML file with inline CSS (no external deps)
+  - < 20KB total size, loads in < 1 second
+  - Mobile-responsive
+  - Dark mode by default (developer aesthetic)
+  - No JavaScript required for core content
+- [x] Above-the-fold content (15-second message):
+  - Headline options (choose one):
+    - "Your AI finally knows what you know"
+    - "All your knowledge. One search. AI-ready."
+    - "Index everything. Find anything. Locally."
+  - Subhead: "Code, docs, notes, wikis — indexed locally for AI assistants. One binary. Zero cloud."
+  - Visual: Show code repo + Obsidian vault + wiki being indexed
+  - 3-second demo GIF or static terminal screenshot
+  - Single CTA: "Install now: `cargo install kdex`"
+- [x] Key message points (communicate in 15 sec):
+  - Works with: code repos, Obsidian vaults, markdown wikis, any text
+  - AI assistants (Copilot, Claude, Ollama) can search YOUR knowledge
+  - Runs locally — your data never leaves your machine
+  - One command to index, instant search
+- [x] Page structure:
+  1. Hero (headline + demo + install)
+  2. Problem/Solution (AI lacks YOUR context — code AND knowledge)
+  3. What it indexes (code + Obsidian + wikis + any markdown)
+  4. Features (3-4 key capabilities with icons)
+  5. Integrations (Copilot, Claude, Ollama logos)
+  6. Quickstart (3 commands)
+  7. Footer (GitHub link, license)
+- [x] Create `docs/index.html` (GitHub Pages compatible):
+  - Pure HTML + inline CSS
+  - System fonts only (no web fonts)
+  - CSS custom properties for theming
+  - Semantic HTML for accessibility
+- [x] Optional enhancements (still single file):
+  - Minimal JS for copy-to-clipboard on install command
+  - CSS animations for subtle polish
+  - Prefers-color-scheme for light/dark auto-switch
+
+---
+
+## Phase 13: Remote Repositories & Configuration Portability ✅
+
+Enable seamless indexing of remote GitHub repositories and portable configuration across machines.
+
+**Goal:** Users can add remote repos by URL, have them automatically cloned and synced, and easily replicate their kdex setup on new machines.
+
+### Part 13.1: Remote GitHub Repository Support ✅
+
+Add ability to index remote GitHub repositories by URL, with automatic local cloning.
+
+- [x] Design remote repository model:
+  - [x] Extend repository schema: `source_type` (local | remote), `remote_url`, `clone_path`
+  - [x] Store cloned repos in `~/.config/kdex/repos/<owner>/<repo>/`
+  - [x] Track clone state: cloned, cloning, failed, needs_sync
+- [x] Implement `kdex add --remote <github-url>`:
+  - [x] Parse GitHub URL formats: HTTPS, SSH, shorthand (`owner/repo`)
+  - [x] Clone to config directory using `git2` crate
+  - [x] Support branch specification: `--branch <name>` (default: default branch)
+  - [x] Show progress during clone with `RemoteCallbacks`
+  - [x] Handle authentication: SSH keys, PAT via env var (`KDEX_GITHUB_TOKEN`)
+  - [x] Index immediately after successful clone
+- [x] Shallow clone option:
+  - [x] Add `--shallow` flag for faster clones (depth=1)
+  - [x] Document trade-offs (no history, faster, less disk)
+- [x] Error handling:
+  - [x] Invalid URL: clear error with format examples
+  - [x] Auth failure: suggest SSH setup or token config
+  - [x] Network error: retry once, then fail with message
+  - [x] Already added: ask update/skip/force
+
+### Part 13.2: Background Sync for Remote Repositories ✅
+
+Keep remote repositories up-to-date with async background sync.
+
+- [x] Background sync architecture:
+  - [x] Use `tokio::task::spawn_blocking` for git operations
+  - [x] Non-blocking: sync happens in background, search remains instant
+  - [x] Sync triggers: on search, on explicit update, configurable interval
+- [x] Implement sync strategy:
+  - [x] `git fetch origin` + `git reset --hard origin/<branch>` (fast-forward only)
+  - [x] Never lose local state (there is none—clones are read-only)
+  - [x] Track last sync time per repo in database
+- [x] Sync on action (lazy sync):
+  - [x] On `kdex search`: check if any remote repo stale (>N minutes since sync)
+  - [x] Trigger background sync for stale repos
+  - [x] Search uses current index, doesn't wait for sync
+  - [x] Re-index after sync completes in background
+- [x] Configurable sync settings:
+  - [x] `config.toml`: `remote_sync_interval_minutes = 30` (default)
+  - [x] `--no-sync` flag to skip sync on individual commands
+  - [x] `kdex sync` command for explicit full sync
+- [x] Progress and status:
+  - [x] TUI: show sync indicator in status bar
+  - [x] CLI: `--verbose` shows sync activity
+  - [x] `kdex status`: show last sync time per remote repo
+- [x] Handle sync failures:
+  - [x] Network down: log warning, continue with existing index
+  - [x] Auth expired: prompt to refresh credentials
+  - [x] Force push (history rewrite): detect and re-clone
+
+### Part 13.3: Remote Repository Cleanup ✅
+
+Automatically clean up when remote repositories are removed.
+
+- [x] Implement cleanup on remove:
+  - [x] When `kdex remove <repo>` for a remote repo, delete cloned directory
+  - [x] Prompt for confirmation: "This will delete the cloned repository at ~/.config/kdex/repos/..."
+  - [x] `--force` flag to skip confirmation
+- [ ] Cleanup stale clones (future enhancement):
+  - [ ] Track clones in `repos.json` manifest in config dir
+  - [ ] `kdex cleanup` command: find orphaned clone directories, offer to delete
+  - [ ] Auto-cleanup on corrupt clone detection
+- [x] Database cleanup:
+  - [x] Remove file entries, embeddings, and FTS index for deleted repo
+  - [x] Run `VACUUM` after large deletes to reclaim space
+- [ ] Safe deletion (future enhancement):
+  - [ ] Move to trash (if available) before permanent delete
+  - [ ] Or: require explicit `--permanent` flag for immediate deletion
+
+### Part 13.4: Configuration Import/Export ✅
+
+Enable easy migration of kdex setup between machines.
+
+- [x] Design portable config format:
+  - [x] `kdex-config.json` or `kdex-config.yaml`:
+    ```yaml
+    version: 1
+    repositories:
+      - type: local
+        path: ~/projects/my-repo
+      - type: remote
+        url: https://github.com/owner/repo
+        branch: main
+    settings:
+      max_file_size_mb: 10
+      file_extensions: [md, txt, rs, py]
+    ```
+  - [x] Exclude machine-specific paths, include only relative or remote refs
+  - [x] Option to include/exclude local repos from export
+- [x] Implement `kdex config export`:
+  - [x] Export to stdout (default) or `--output <file>`
+  - [x] `--remotes-only`: only export remote repos (portable by default)
+  - [x] `--include-local`: include local repos with path warning
+  - [x] `--format json|yaml` (default: yaml for readability)
+- [x] Implement `kdex config import`:
+  - [x] Read from file or stdin
+  - [x] Validate config version and schema
+  - [x] Clone remote repos, attempt to locate local repos
+  - [x] Handle missing local paths: warn, skip, or prompt for new path
+  - [x] Merge vs replace mode: `--merge` (add to existing) vs `--replace` (overwrite)
+- [x] Conflict handling:
+  - [x] Repo already exists: skip, update, or ask
+  - [x] Settings conflict: prefer imported or keep current (configurable)
+- [x] Use cases:
+  - [x] New machine setup: `kdex config import ~/Dropbox/kdex-config.yaml`
+  - [x] Share team setup: export config to repo, teammates import
+  - [x] Backup: `kdex config export > kdex-backup.yaml`
+
+### Part 13.5: GitHub API Integration (Optional Enhancement)
+
+Use GitHub API for enhanced remote repository features.
+
+- [ ] List user's repositories:
+  - [ ] `kdex github list`: show all repos for authenticated user
+  - [ ] Filter by: owned, starred, org membership
+  - [ ] Interactive selection in TUI for batch add
+- [ ] Repository discovery:
+  - [ ] `kdex github search <query>`: search public repos
+  - [ ] Add directly from search results
+- [ ] Rate limiting:
+  - [ ] Respect GitHub API rate limits
+  - [ ] Cache API responses where appropriate
+- [ ] Private repo support:
+  - [ ] Require PAT with `repo` scope
+  - [ ] Document token setup in `doc/github-setup.md`
+
+---
+
 ## Brainstormed Additional Features
 
 Ideas for future consideration:

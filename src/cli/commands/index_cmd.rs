@@ -133,12 +133,12 @@ pub fn run(path: &Path, name: Option<String>, args: &Args) -> Result<()> {
             println!(
                 "  {} Search: {}",
                 "•".dimmed(),
-                "knowledge-index search \"your query\"".cyan()
+                "kdex search \"your query\"".cyan()
             );
-            println!("  {} Browse: {}", "•".dimmed(), "knowledge-index".cyan());
+            println!("  {} Browse: {}", "•".dimmed(), "kdex".cyan());
         } else {
-            println!("  • Search: knowledge-index search \"your query\"");
-            println!("  • Browse: knowledge-index");
+            println!("  • Search: kdex search \"your query\"");
+            println!("  • Browse: kdex");
         }
     }
 

@@ -98,7 +98,7 @@ fn render_header(frame: &mut Frame, app: &App, area: Rect) {
 
     let header = Paragraph::new(vec![
         Line::from(vec![Span::styled(
-            "knowledge-index",
+            "kdex",
             Style::default()
                 .add_modifier(Modifier::BOLD)
                 .fg(Color::Cyan),

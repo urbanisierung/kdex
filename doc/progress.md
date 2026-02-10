@@ -2,6 +2,67 @@
 
 ## Changelog
 
+### 2026-02-10
+
+- **Implemented Phase 13: Remote Repositories & Configuration Portability**
+  - Added `kdex add --remote owner/repo` command for cloning GitHub repos
+  - Added `kdex sync` command for syncing remote repositories
+  - Added `kdex config export` for exporting settings to YAML
+  - Added `kdex config import` for importing settings with merge support
+  - Remote repos cloned to `~/.config/kdex/repos/<owner>/<repo>/`
+  - Support for SSH agent and GitHub token authentication
+  - Shallow clone option for faster setup
+  - Auto-delete cloned directories on `kdex remove`
+  - Extended database schema (v3) for remote repo metadata
+  - Added git2, serde_yaml, url dependencies
+
+- **Added Phase 13: Remote Repositories & Configuration Portability**
+  - Part 13.1: Remote GitHub repository support with auto-clone
+  - Part 13.2: Background sync for keeping remote repos up-to-date
+  - Part 13.3: Automatic cleanup when removing remote repos
+  - Part 13.4: Configuration import/export for machine migration
+  - Part 13.5: Optional GitHub API integration for repo discovery
+
+- **Added GitHub Pages Workflow**
+  - Created `.github/workflows/pages.yml` for deploying landing page
+  - Deploys `docs/` folder to GitHub Pages on push to main
+
+- **Completed Phase 12: Marketing & Growth**
+  - Rewrote README with engaging hero section, feature tables, problem/solution format
+  - Created `doc/ollama-integration.md` for local LLM workflows
+  - Created `docs/index.html` - single-file landing page (9.5KB, dark mode, mobile-responsive)
+  - Added all messaging pillars: local-first, AI-ready, instant setup, universal
+
+- **Added Phase 12: Marketing & Growth to Roadmap**
+  - README excellence with best practices from popular CLIs
+  - Marketing message and positioning strategy
+  - Ollama integration for local-first AI workflow
+  - Single-file landing page design (< 20KB, loads in < 1s)
+
+- **Renamed CLI to `kdex`** (Knowledge DEX)
+  - Updated package name from `knowledge-index` to `kdex`
+  - All CLI commands now use `kdex` instead of `knowledge-index`
+  - Config directory auto-migrates from `~/.config/knowledge-index` to `~/.config/kdex`
+  - Environment variable changed to `KDEX_CONFIG_DIR` (legacy still supported)
+  - Updated all documentation, MCP server, and help text
+
+- **Fixed x86_64-apple-darwin Build**
+  - Removed x86_64-apple-darwin from release targets (Intel Mac legacy)
+  - ort-sys doesn't provide prebuilt ONNX binaries for this target
+  - Apple Silicon (aarch64-apple-darwin) still supported
+  - Intel Mac users can build from source
+
+- **Created Demo Script for asciinema**
+  - Added `scripts/demo.sh` for recording terminal demos
+  - Demonstrates indexing, searching, JSON output, MCP integration
+  - Instructions for recording with asciinema
+
+- **Search Efficiency Audit**
+  - Verified FTS5 search works well for common queries
+  - Tested "free port", "port 3000", tool names like "fuser"
+  - Results include highlighted snippets with match markers
+  - Search is efficient for AI assistant use cases
+
 ### 2026-02-09
 
 - **Enhanced MCP Server Startup**

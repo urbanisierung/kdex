@@ -1,152 +1,218 @@
-# knowledge-index
+<p align="center">
+  <img src="https://img.shields.io/badge/rust-1.88+-orange?logo=rust" alt="Rust 1.88+">
+  <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License">
+  <img src="https://img.shields.io/badge/platform-linux%20%7C%20macos%20%7C%20windows-lightgrey" alt="Platform">
+</p>
 
-A fast, local-first CLI for indexing code repositories and knowledge bases, enabling AI-powered search across all your projects.
+<h1 align="center">kdex</h1>
 
-## Motivation
+<p align="center">
+  <strong>All your knowledge. One search. AI-ready.</strong>
+</p>
 
-Modern developers and knowledge workers maintain dozens of repositories, documentation sites, and note collections (like Obsidian vaults). When working with AI assistants, finding the right context across these scattered sources is challenging.
+<p align="center">
+  Index your code, docs, notes, and wikis locally.<br>
+  Let AI assistants search everything you know.
+</p>
 
-**knowledge-index** solves this by:
-- **Indexing everything locally** — Code, markdown, configs across all your projects
-- **Enabling instant full-text search** — SQLite FTS5 provides sub-millisecond queries
-- **Providing AI-ready output** — JSON mode and MCP server for AI assistant integration
-- **Working offline** — No cloud dependencies, your data stays local
+---
 
-## Prerequisites
+## The Problem
 
-- Rust 1.88+ (install via [rustup](https://rustup.rs/))
-- Docker (optional, for running CI checks locally)
+You have knowledge everywhere:
+- **Code** across dozens of repositories
+- **Notes** in Obsidian, Logseq, or markdown files
+- **Docs** scattered in wikis and READMEs
 
-## Quickstart
+When you ask an AI assistant for help, it has no idea what's in YOUR files. You end up copy-pasting context manually.
 
-```bash
-# Clone and build
-git clone https://github.com/urbanisierung/knowledge-index.git
-cd knowledge-index
-cargo build --release
-
-# Index a project
-./target/release/knowledge-index index /path/to/your/project
-
-# Search across all indexed content
-./target/release/knowledge-index search "async function"
-
-# Launch interactive TUI
-./target/release/knowledge-index
-
-# Or install globally
-cargo install --path .
-```
-
-## Usage
-
-The CLI supports two modes:
-
-### App Mode (TUI)
+## The Solution
 
 ```bash
-knowledge-index
+# Index everything
+kdex index ~/code/my-project
+kdex index ~/Documents/obsidian-vault
+kdex index ~/wiki
+
+# Search instantly
+kdex search "how to deploy"
+
+# AI assistants can now search your knowledge
+kdex mcp  # Start MCP server for Copilot, Claude, Ollama
 ```
 
-Launches a full-screen interactive interface for searching and managing indexed repositories.
+**kdex** creates a local search index that AI tools can query. Your data never leaves your machine.
 
-### CLI Mode
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 🔍 **Instant Search** | SQLite FTS5 gives sub-millisecond full-text search |
+| 🤖 **AI-Ready** | MCP server for GitHub Copilot, Claude, Ollama |
+| 📁 **Universal** | Code repos, Obsidian vaults, wikis, any markdown |
+| 🔒 **Local-First** | Your data stays on your machine. Always. |
+| ⚡ **Fast** | Index 100k files in seconds, search in milliseconds |
+| 🌐 **Remote Repos** | Add GitHub repos by URL—auto-cloned, auto-synced |
+| 📦 **Portable** | Export/import config for easy machine migration |
+| 🖥️ **Interactive TUI** | Full-screen interface with preview panel |
+
+---
+
+## 🚀 Quickstart
 
 ```bash
-# Index current directory
-knowledge-index index .
+# Install
+cargo install kdex
 
-# Search for code
-knowledge-index search "database connection"
+# Index your project
+kdex index .
 
-# List all indexed repos
-knowledge-index list
+# Add a GitHub repo
+kdex add --remote owner/repo
 
-# Get JSON output for scripting
-knowledge-index search "TODO" --json
+# Search
+kdex search "authentication"
+
+# Launch interactive mode
+kdex
 ```
 
-Run `knowledge-index --help` for all available commands.
+That's it. Your knowledge, instantly searchable.
 
-## AI Integration (MCP)
+---
 
-Start the MCP server to use knowledge-index with AI assistants:
+## 🤖 AI Integration
 
-```bash
-knowledge-index mcp
-```
+kdex speaks [MCP](https://modelcontextprotocol.io/) (Model Context Protocol), so AI assistants can search your indexed content directly.
 
 ### GitHub Copilot CLI
 
-Add to your MCP servers configuration:
+Add to `~/.config/github-copilot/mcp.json`:
 
 ```json
 {
   "mcpServers": {
-    "knowledge-index": {
-      "command": "knowledge-index",
-      "args": ["mcp"]
-    }
+    "kdex": { "command": "kdex", "args": ["mcp"] }
   }
 }
 ```
 
 ### Claude Desktop
 
-Add to `~/.config/claude/claude_desktop_config.json` (Linux/macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+Add to `~/.config/claude/claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
-    "knowledge-index": {
-      "command": "knowledge-index",
-      "args": ["mcp"]
-    }
+    "kdex": { "command": "kdex", "args": ["mcp"] }
   }
 }
 ```
 
-See [MCP Integration Guide](doc/mcp-integration.md) for detailed setup and available tools.
+### Ollama (Local LLMs)
 
-## Development
-
-This project uses a Makefile for development workflows. Docker is used to run CI checks locally, ensuring consistency with GitHub Actions.
+Pipe search results to your local model:
 
 ```bash
-# Run full CI pipeline (recommended before pushing)
-make ci
-
-# Run quick checks (format + clippy only)
-make ci-quick
-
-# Check minimum supported Rust version
-make ci-msrv
-
-# Individual CI steps
-make ci-format      # Check formatting
-make ci-clippy      # Run clippy lints
-make ci-test        # Run tests
-make ci-doc         # Build documentation
-
-# Local development (uses local Rust toolchain)
-make build          # Build debug
-make release        # Build release
-make test           # Run tests
-make fmt            # Format code
-make lint           # Run clippy
-make clean          # Clean artifacts
+kdex search "error handling" --json | \
+  jq -r '.results[].snippet' | \
+  ollama run llama3 "Explain this code:"
 ```
 
-Run `make help` to see all available commands.
+See [MCP Integration Guide](doc/mcp-integration.md) for more details.
 
-## Documentation
+---
 
-- [Features](doc/features.md) — Feature overview
+## 📖 What It Indexes
+
+| Source | Examples |
+|--------|----------|
+| **Code Repositories** | Any git repo, monorepos, microservices |
+| **Knowledge Bases** | Obsidian vaults, Logseq graphs, Dendron |
+| **Documentation** | Markdown wikis, READMEs, technical docs |
+| **Config Files** | YAML, TOML, JSON with searchable content |
+
+kdex respects `.gitignore` and skips binary files automatically.
+
+---
+
+## 💻 Usage
+
+### Interactive Mode (TUI)
+
+```bash
+kdex
+```
+
+Full-screen interface with:
+- Real-time search as you type
+- File preview panel (`Ctrl+P`)
+- Repository management
+- Keyboard-driven navigation
+
+### Command Line
+
+```bash
+kdex index <path>              # Index a directory
+kdex search <query>            # Search indexed content
+kdex search <query> --json     # JSON output for scripting
+kdex list                      # List indexed repositories
+kdex remove <path>             # Remove from index
+kdex mcp                       # Start MCP server
+```
+
+Run `kdex --help` for all options.
+
+---
+
+## 🔧 Installation
+
+### From crates.io (recommended)
+
+```bash
+cargo install kdex
+```
+
+### From source
+
+```bash
+git clone https://github.com/urbanisierung/kdex.git
+cd kdex
+cargo install --path .
+```
+
+### Requirements
+
+- Rust 1.88+ ([install via rustup](https://rustup.rs/))
+- Works on Linux, macOS (Apple Silicon), and Windows
+
+---
+
+## 📚 Documentation
+
+- [Features](doc/features.md) — Full feature list
 - [Documentation](doc/documentation.md) — Detailed usage guide
-- [MCP Integration](doc/mcp-integration.md) — AI assistant setup guide
-- [Roadmap](doc/roadmap.md) — Implementation roadmap
-- [Progress](doc/progress.md) — Changelog
+- [MCP Integration](doc/mcp-integration.md) — AI assistant setup
+- [Ollama Integration](doc/ollama-integration.md) — Local LLM workflow
+- [Roadmap](doc/roadmap.md) — What's coming next
+
+---
+
+## 🛠️ Development
+
+```bash
+make ci        # Run full CI pipeline (Docker)
+make ci-quick  # Quick checks (format + clippy)
+make test      # Run tests
+make build     # Build debug binary
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup.
+
+---
 
 ## License
 
-MIT
+MIT © [urbanisierung](https://github.com/urbanisierung)
