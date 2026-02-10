@@ -2,6 +2,14 @@
 
 ## Changelog
 
+### 2026-02-10
+
+- **Added Phase 11 to Roadmap**
+  - Cross-platform build fixes (x86_64-apple-darwin ort issue)
+  - CLI branding/naming brainstorm
+  - Asciinema demo script creation
+  - Search efficiency audit for AI use cases
+
 ### 2026-02-09
 
 - **Enhanced MCP Server Startup**

@@ -1451,6 +1451,112 @@ Final quality improvements and release preparation.
 
 ---
 
+## Phase 11: Release Hardening & Marketing
+
+Final fixes for cross-platform builds, branding improvements, and promotional materials.
+
+**Goal:** Ensure all release builds work, establish memorable branding, and create demo materials for adoption.
+
+### Part 11.1: Cross-Platform Build Fixes
+
+The `ort` crate (ONNX Runtime) requires prebuilt binaries or manual compilation for certain targets.
+
+- [ ] Investigate `x86_64-apple-darwin` build failure:
+  - Error: `ort-sys@2.0.0-rc.11: ort does not provide prebuilt binaries for target x86_64-apple-darwin`
+  - Options to investigate:
+    1. Check if newer `ort` version includes x86_64-apple-darwin binaries
+    2. Use `ort` feature flags to download binaries at build time
+    3. Compile ONNX Runtime from source for this target
+    4. Make semantic search optional at compile time (feature flag)
+- [ ] If unfixable: Remove `x86_64-apple-darwin` from release workflow
+  - Apple Silicon (`aarch64-apple-darwin`) build is working
+  - x86_64 macOS is legacy (last Intel Mac shipped 2021)
+  - Document that Intel Mac users should build from source
+- [ ] Verify all other release targets still build:
+  - `x86_64-unknown-linux-gnu` ✓
+  - `aarch64-apple-darwin` ✓
+  - `x86_64-pc-windows-msvc` ✓
+
+### Part 11.2: CLI Branding & Naming
+
+Current name `knowledge-index` is descriptive but verbose. A shorter, memorable name improves adoption.
+
+- [ ] Brainstorm short name candidates (requirements: short, topic-relevant, available):
+  - `kix` — Knowledge IndeX (3 chars, memorable)
+  - `dex` — Developer EXplorer / Document inDEX
+  - `hive` — Central knowledge storage metaphor
+  - `lore` — Accumulated knowledge/wisdom
+  - `tome` — Book of knowledge
+  - `seek` — Search action verb
+  - `qry` — Query (phonetic)
+  - `ctx` — Context (for AI context building)
+  - `skim` — Quick search metaphor
+  - `ix` — Index abbreviation (2 chars)
+- [ ] Check name availability:
+  - crates.io namespace
+  - GitHub organization/repo
+  - Homebrew formula names
+  - Common package manager conflicts
+- [ ] Evaluate top candidates:
+  - Pronounceability
+  - Memorability
+  - Typing ease (no special chars, easy on QWERTY)
+  - Association with purpose
+- [ ] If renaming: Update all references:
+  - `Cargo.toml` package name and binary name
+  - Config directory name (with migration path)
+  - Documentation and README
+  - MCP server identification
+
+### Part 11.3: Demo & Promotional Materials
+
+Create visual demonstrations for README, social media, and documentation.
+
+- [ ] Create asciinema recording script (`scripts/demo.sh`):
+  - Show indexing a sample repository
+  - Demonstrate TUI navigation and search
+  - Show preview panel functionality
+  - Demonstrate JSON output for scripting
+  - Show MCP server startup
+  - Keep recording under 60 seconds
+- [ ] Record and upload to asciinema.org
+- [ ] Embed in README.md with animated GIF fallback
+- [ ] Create static screenshots for documentation:
+  - TUI main search view
+  - Preview panel
+  - Repos management
+  - Help overlay
+
+### Part 11.4: Search Efficiency Audit
+
+Validate that common AI assistant use cases work efficiently with current schema.
+
+- [ ] Test scenario: "How to kill a port" (user has documented this in markdown)
+  - Index a test vault with the answer documented
+  - Run search via CLI and MCP
+  - Measure: Does FTS5 find it with various phrasings?
+    - "kill port"
+    - "how to kill a port"
+    - "stop process on port"
+    - "port 3000 in use"
+  - Document results and any improvements needed
+- [ ] Audit search relevance for common queries:
+  - Commands/how-tos (action-oriented)
+  - Code patterns (function signatures, imports)
+  - Concepts (explanations, definitions)
+  - Error messages (stack traces, error codes)
+- [ ] Consider schema improvements if needed:
+  - [ ] Add `document_type` field (code, markdown, config, etc.)
+  - [ ] Add `section_type` for markdown (heading, paragraph, code block)
+  - [ ] Index headings separately for better structure matching
+  - [ ] Consider TF-IDF or BM25 ranking adjustments
+- [ ] Ensure MCP `search` tool returns enough context:
+  - Snippets should include surrounding context
+  - File path and line numbers for precise location
+  - Score/relevance indicator for result ordering
+
+---
+
 ## Brainstormed Additional Features
 
 Ideas for future consideration:
