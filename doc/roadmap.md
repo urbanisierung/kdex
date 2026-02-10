@@ -1675,6 +1675,144 @@ Create a minimal, fast, single-file landing page that sells the vision in 15 sec
 
 ---
 
+## Phase 13: Remote Repositories & Configuration Portability
+
+Enable seamless indexing of remote GitHub repositories and portable configuration across machines.
+
+**Goal:** Users can add remote repos by URL, have them automatically cloned and synced, and easily replicate their kdex setup on new machines.
+
+### Part 13.1: Remote GitHub Repository Support
+
+Add ability to index remote GitHub repositories by URL, with automatic local cloning.
+
+- [ ] Design remote repository model:
+  - [ ] Extend repository schema: `source_type` (local | remote), `remote_url`, `clone_path`
+  - [ ] Store cloned repos in `~/.config/kdex/repos/<owner>/<repo>/`
+  - [ ] Track clone state: cloned, cloning, failed, needs_sync
+- [ ] Implement `kdex add --remote <github-url>`:
+  - [ ] Parse GitHub URL formats: HTTPS, SSH, shorthand (`owner/repo`)
+  - [ ] Clone to config directory using `git2` crate
+  - [ ] Support branch specification: `--branch <name>` (default: default branch)
+  - [ ] Show progress during clone with `RemoteCallbacks`
+  - [ ] Handle authentication: SSH keys, PAT via env var (`KDEX_GITHUB_TOKEN`)
+  - [ ] Index immediately after successful clone
+- [ ] Shallow clone option:
+  - [ ] Add `--shallow` flag for faster clones (depth=1)
+  - [ ] Document trade-offs (no history, faster, less disk)
+- [ ] Error handling:
+  - [ ] Invalid URL: clear error with format examples
+  - [ ] Auth failure: suggest SSH setup or token config
+  - [ ] Network error: retry once, then fail with message
+  - [ ] Already added: ask update/skip/force
+
+### Part 13.2: Background Sync for Remote Repositories
+
+Keep remote repositories up-to-date with async background sync.
+
+- [ ] Background sync architecture:
+  - [ ] Use `tokio::task::spawn_blocking` for git operations
+  - [ ] Non-blocking: sync happens in background, search remains instant
+  - [ ] Sync triggers: on search, on explicit update, configurable interval
+- [ ] Implement sync strategy:
+  - [ ] `git fetch origin` + `git reset --hard origin/<branch>` (fast-forward only)
+  - [ ] Never lose local state (there is none—clones are read-only)
+  - [ ] Track last sync time per repo in database
+- [ ] Sync on action (lazy sync):
+  - [ ] On `kdex search`: check if any remote repo stale (>N minutes since sync)
+  - [ ] Trigger background sync for stale repos
+  - [ ] Search uses current index, doesn't wait for sync
+  - [ ] Re-index after sync completes in background
+- [ ] Configurable sync settings:
+  - [ ] `config.toml`: `remote_sync_interval_minutes = 30` (default)
+  - [ ] `--no-sync` flag to skip sync on individual commands
+  - [ ] `kdex sync` command for explicit full sync
+- [ ] Progress and status:
+  - [ ] TUI: show sync indicator in status bar
+  - [ ] CLI: `--verbose` shows sync activity
+  - [ ] `kdex status`: show last sync time per remote repo
+- [ ] Handle sync failures:
+  - [ ] Network down: log warning, continue with existing index
+  - [ ] Auth expired: prompt to refresh credentials
+  - [ ] Force push (history rewrite): detect and re-clone
+
+### Part 13.3: Remote Repository Cleanup
+
+Automatically clean up when remote repositories are removed.
+
+- [ ] Implement cleanup on remove:
+  - [ ] When `kdex remove <repo>` for a remote repo, delete cloned directory
+  - [ ] Prompt for confirmation: "This will delete the cloned repository at ~/.config/kdex/repos/..."
+  - [ ] `--force` flag to skip confirmation
+- [ ] Cleanup stale clones:
+  - [ ] Track clones in `repos.json` manifest in config dir
+  - [ ] `kdex cleanup` command: find orphaned clone directories, offer to delete
+  - [ ] Auto-cleanup on corrupt clone detection
+- [ ] Database cleanup:
+  - [ ] Remove file entries, embeddings, and FTS index for deleted repo
+  - [ ] Run `VACUUM` after large deletes to reclaim space
+- [ ] Safe deletion:
+  - [ ] Move to trash (if available) before permanent delete
+  - [ ] Or: require explicit `--permanent` flag for immediate deletion
+
+### Part 13.4: Configuration Import/Export
+
+Enable easy migration of kdex setup between machines.
+
+- [ ] Design portable config format:
+  - [ ] `kdex-config.json` or `kdex-config.yaml`:
+    ```yaml
+    version: 1
+    repositories:
+      - type: local
+        path: ~/projects/my-repo
+      - type: remote
+        url: https://github.com/owner/repo
+        branch: main
+    settings:
+      max_file_size_mb: 10
+      file_extensions: [md, txt, rs, py]
+    ```
+  - [ ] Exclude machine-specific paths, include only relative or remote refs
+  - [ ] Option to include/exclude local repos from export
+- [ ] Implement `kdex config export`:
+  - [ ] Export to stdout (default) or `--output <file>`
+  - [ ] `--remotes-only`: only export remote repos (portable by default)
+  - [ ] `--include-local`: include local repos with path warning
+  - [ ] `--format json|yaml` (default: yaml for readability)
+- [ ] Implement `kdex config import`:
+  - [ ] Read from file or stdin
+  - [ ] Validate config version and schema
+  - [ ] Clone remote repos, attempt to locate local repos
+  - [ ] Handle missing local paths: warn, skip, or prompt for new path
+  - [ ] Merge vs replace mode: `--merge` (add to existing) vs `--replace` (overwrite)
+- [ ] Conflict handling:
+  - [ ] Repo already exists: skip, update, or ask
+  - [ ] Settings conflict: prefer imported or keep current (configurable)
+- [ ] Use cases:
+  - [ ] New machine setup: `kdex config import ~/Dropbox/kdex-config.yaml`
+  - [ ] Share team setup: export config to repo, teammates import
+  - [ ] Backup: `kdex config export > kdex-backup.yaml`
+
+### Part 13.5: GitHub API Integration (Optional Enhancement)
+
+Use GitHub API for enhanced remote repository features.
+
+- [ ] List user's repositories:
+  - [ ] `kdex github list`: show all repos for authenticated user
+  - [ ] Filter by: owned, starred, org membership
+  - [ ] Interactive selection in TUI for batch add
+- [ ] Repository discovery:
+  - [ ] `kdex github search <query>`: search public repos
+  - [ ] Add directly from search results
+- [ ] Rate limiting:
+  - [ ] Respect GitHub API rate limits
+  - [ ] Cache API responses where appropriate
+- [ ] Private repo support:
+  - [ ] Require PAT with `repo` scope
+  - [ ] Document token setup in `doc/github-setup.md`
+
+---
+
 ## Brainstormed Additional Features
 
 Ideas for future consideration:

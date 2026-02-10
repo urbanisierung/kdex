@@ -4,6 +4,17 @@
 
 ### 2026-02-10
 
+- **Added Phase 13: Remote Repositories & Configuration Portability**
+  - Part 13.1: Remote GitHub repository support with auto-clone
+  - Part 13.2: Background sync for keeping remote repos up-to-date
+  - Part 13.3: Automatic cleanup when removing remote repos
+  - Part 13.4: Configuration import/export for machine migration
+  - Part 13.5: Optional GitHub API integration for repo discovery
+
+- **Added GitHub Pages Workflow**
+  - Created `.github/workflows/pages.yml` for deploying landing page
+  - Deploys `docs/` folder to GitHub Pages on push to main
+
 - **Completed Phase 12: Marketing & Growth**
   - Rewrote README with engaging hero section, feature tables, problem/solution format
   - Created `doc/ollama-integration.md` for local LLM workflows
