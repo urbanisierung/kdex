@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document tracks all features of the knowledge-index CLI application.
+This document tracks all features of the kdex CLI application.
 
 ## Feature List
 

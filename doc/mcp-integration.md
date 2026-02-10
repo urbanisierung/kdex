@@ -1,17 +1,17 @@
 # MCP Integration Guide
 
-This document explains how to integrate `knowledge-index` with AI assistants using the Model Context Protocol (MCP).
+This document explains how to integrate `kdex` with AI assistants using the Model Context Protocol (MCP).
 
 ## Overview
 
-`knowledge-index` provides an MCP server that allows AI assistants to search and retrieve content from your indexed repositories and knowledge bases. The server communicates over stdio, making it compatible with local AI tools.
+`kdex` provides an MCP server that allows AI assistants to search and retrieve content from your indexed repositories and knowledge bases. The server communicates over stdio, making it compatible with local AI tools.
 
 ## Quick Start
 
 Start the MCP server:
 
 ```bash
-knowledge-index mcp
+kdex mcp
 ```
 
 The server will output to stderr for logging and use stdout exclusively for MCP protocol messages.
@@ -118,8 +118,8 @@ Add to your `claude_desktop_config.json` (typically at `~/.config/claude/claude_
 ```json
 {
   "mcpServers": {
-    "knowledge-index": {
-      "command": "knowledge-index",
+    "kdex": {
+      "command": "kdex",
       "args": ["mcp"]
     }
   }
@@ -128,7 +128,7 @@ Add to your `claude_desktop_config.json` (typically at `~/.config/claude/claude_
 
 ### GitHub Copilot CLI
 
-GitHub Copilot CLI supports MCP servers for enhanced context. Add knowledge-index to your MCP configuration:
+GitHub Copilot CLI supports MCP servers for enhanced context. Add kdex to your MCP configuration:
 
 **Linux/macOS:** `~/.config/github-copilot/mcp.json`
 **Windows:** `%APPDATA%\GitHub Copilot\mcp.json`
@@ -136,8 +136,8 @@ GitHub Copilot CLI supports MCP servers for enhanced context. Add knowledge-inde
 ```json
 {
   "mcpServers": {
-    "knowledge-index": {
-      "command": "knowledge-index",
+    "kdex": {
+      "command": "kdex",
       "args": ["mcp"]
     }
   }
@@ -152,13 +152,13 @@ Add these to your `.bashrc` or `.zshrc` for quick access:
 
 ```bash
 # Quick search with JSON output
-alias ki-search='knowledge-index search --json'
+alias ki-search='kdex search --json'
 
 # Start MCP server
-alias ki-mcp='knowledge-index mcp'
+alias ki-mcp='kdex mcp'
 
 # List indexed repos
-alias ki-list='knowledge-index list'
+alias ki-list='kdex list'
 ```
 
 ## Prerequisites
@@ -168,17 +168,17 @@ Before using the MCP server, ensure you have indexed at least one repository:
 ```bash
 # Index your project
 cd ~/projects/my-app
-knowledge-index index
+kdex index
 
 # Or index any directory
-knowledge-index index ~/Documents/notes
+kdex index ~/Documents/notes
 ```
 
 ## Troubleshooting
 
 ### No Results Returned
 
-1. Check if repositories are indexed: `knowledge-index list`
+1. Check if repositories are indexed: `kdex list`
 2. Verify the search query syntax
 3. Try a broader search term
 
@@ -187,9 +187,9 @@ knowledge-index index ~/Documents/notes
 1. Ensure the binary is in your PATH
 2. Check stderr output for error messages
 3. Verify the database exists at the expected location:
-   - Linux: `~/.config/knowledge-index/index.db`
-   - macOS: `~/Library/Application Support/knowledge-index/index.db`
-   - Windows: `%APPDATA%\knowledge-index\index.db`
+   - Linux: `~/.config/kdex/index.db`
+   - macOS: `~/Library/Application Support/kdex/index.db`
+   - Windows: `%APPDATA%\kdex\index.db`
 
 ### Connection Issues
 
@@ -199,7 +199,7 @@ knowledge-index index ~/Documents/notes
 
 ## Best Practices for AI Assistants
 
-When using knowledge-index with AI assistants:
+When using kdex with AI assistants:
 
 1. **Start with `list_repos`** to understand what content is available
 2. **Use `search` for discovery** with broad queries, then narrow down

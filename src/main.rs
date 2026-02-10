@@ -39,7 +39,7 @@ fn run_with_args(args: &Args) -> Result<()> {
             if is(atty::Stream::Stdout) && is(atty::Stream::Stdin) {
                 tui::run()
             } else {
-                Args::parse_from(["knowledge-index", "--help"]);
+                Args::parse_from(["kdex", "--help"]);
                 Ok(())
             }
         }

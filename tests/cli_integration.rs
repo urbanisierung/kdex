@@ -1,4 +1,4 @@
-//! Integration tests for knowledge-index CLI.
+//! Integration tests for kdex CLI.
 
 use std::fs;
 use std::path::PathBuf;
@@ -9,7 +9,7 @@ fn binary_path() -> PathBuf {
     let mut path = std::env::current_exe().unwrap();
     path.pop(); // Remove test binary name
     path.pop(); // Remove 'deps'
-    path.push("knowledge-index");
+    path.push("kdex");
 
     // On Windows, add .exe extension
     #[cfg(windows)]
@@ -23,7 +23,7 @@ fn binary_path() -> PathBuf {
 /// Create a Command with an isolated config directory for testing
 fn test_command(config_dir: &std::path::Path) -> Command {
     let mut cmd = Command::new(binary_path());
-    cmd.env("KNOWLEDGE_INDEX_CONFIG_DIR", config_dir);
+    cmd.env("KDEX_CONFIG_DIR", config_dir);
     cmd
 }
 
@@ -88,7 +88,7 @@ fn test_cli_help() {
 
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
-    assert!(stdout.contains("knowledge-index"));
+    assert!(stdout.contains("kdex"));
     assert!(stdout.contains("index"));
     assert!(stdout.contains("search"));
 }
@@ -102,7 +102,7 @@ fn test_cli_version() {
 
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
-    assert!(stdout.contains("knowledge-index"));
+    assert!(stdout.contains("kdex"));
 }
 
 #[test]

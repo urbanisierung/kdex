@@ -3,23 +3,23 @@ use std::path::PathBuf;
 
 #[derive(Parser)]
 #[command(
-    name = "knowledge-index",
+    name = "kdex",
     about = "Index and search code repositories and knowledge bases for AI-powered workflows",
     version,
     author
 )]
 #[command(after_help = "Examples:
-  knowledge-index                     Launch interactive TUI
-  knowledge-index index .             Index current directory
-  knowledge-index index ~/notes       Index Obsidian vault
-  knowledge-index search \"async fn\"   Search for async functions
-  knowledge-index search \"TODO\" --type markdown
-  knowledge-index list                List all indexed repositories
+  kdex                     Launch interactive TUI
+  kdex index .             Index current directory
+  kdex index ~/notes       Index Obsidian vault
+  kdex search \"async fn\"   Search for async functions
+  kdex search \"TODO\" --type markdown
+  kdex list                List all indexed repositories
 
 Shell Aliases (add to ~/.bashrc or ~/.zshrc):
-  alias ki='knowledge-index'
-  alias kis='knowledge-index search'
-  alias kii='knowledge-index index .'
+  alias ki='kdex'
+  alias kis='kdex search'
+  alias kii='kdex index .'
 ")]
 #[allow(clippy::struct_excessive_bools)]
 pub struct Args {
@@ -51,9 +51,9 @@ pub struct Args {
 pub enum Commands {
     /// Index a directory (code repository or knowledge base)
     #[command(after_help = "Examples:
-  knowledge-index index                    Index current directory
-  knowledge-index index ~/projects/myapp   Index specific project
-  knowledge-index index ~/Documents/notes  Index Obsidian vault
+  kdex index                    Index current directory
+  kdex index ~/projects/myapp   Index specific project
+  kdex index ~/Documents/notes  Index Obsidian vault
 ")]
     Index {
         /// Directory to index (defaults to current directory)
@@ -67,11 +67,11 @@ pub enum Commands {
 
     /// Search indexed content
     #[command(after_help = "Examples:
-  knowledge-index search \"database connection\"
-  knowledge-index search \"async fn\" --repo api-service
-  knowledge-index search \"TODO\" --type markdown
-  knowledge-index search \"error handling\" --semantic
-  knowledge-index search \"authentication\" --hybrid
+  kdex search \"database connection\"
+  kdex search \"async fn\" --repo api-service
+  kdex search \"TODO\" --type markdown
+  kdex search \"error handling\" --semantic
+  kdex search \"authentication\" --hybrid
 ")]
     Search {
         /// Search query (supports phrases and wildcards)
@@ -108,8 +108,8 @@ pub enum Commands {
 
     /// Update an existing index
     #[command(after_help = "Examples:
-  knowledge-index update .            Update current directory
-  knowledge-index update --all        Update all repositories
+  kdex update .            Update current directory
+  kdex update --all        Update all repositories
 ")]
     Update {
         /// Repository path to update
@@ -125,8 +125,8 @@ pub enum Commands {
 
     /// Remove a repository from the index
     #[command(after_help = "Examples:
-  knowledge-index remove ~/projects/old-project
-  knowledge-index remove . --force    Skip confirmation
+  kdex remove ~/projects/old-project
+  kdex remove . --force    Skip confirmation
 ")]
     Remove {
         /// Repository path to remove
@@ -165,8 +165,8 @@ pub enum Commands {
 
     /// Rebuild embeddings for semantic search
     #[command(after_help = "Examples:
-  knowledge-index rebuild-embeddings         Rebuild all embeddings
-  knowledge-index rebuild-embeddings --repo myproject
+  kdex rebuild-embeddings         Rebuild all embeddings
+  kdex rebuild-embeddings --repo myproject
 ")]
     RebuildEmbeddings {
         /// Filter by repository name

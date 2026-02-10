@@ -29,7 +29,7 @@ fn render_empty(frame: &mut Frame, area: Rect) {
         )),
         Line::from(""),
         Line::from(Span::styled(
-            "  knowledge-index index /path/to/project",
+            "  kdex index /path/to/project",
             Style::default().fg(Color::Cyan),
         )),
     ];

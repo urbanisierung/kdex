@@ -1,4 +1,4 @@
-# knowledge-index
+# kdex
 
 A fast, local-first CLI for indexing code repositories and knowledge bases, enabling AI-powered search across all your projects.
 
@@ -6,7 +6,7 @@ A fast, local-first CLI for indexing code repositories and knowledge bases, enab
 
 Modern developers and knowledge workers maintain dozens of repositories, documentation sites, and note collections (like Obsidian vaults). When working with AI assistants, finding the right context across these scattered sources is challenging.
 
-**knowledge-index** solves this by:
+**kdex** solves this by:
 - **Indexing everything locally** — Code, markdown, configs across all your projects
 - **Enabling instant full-text search** — SQLite FTS5 provides sub-millisecond queries
 - **Providing AI-ready output** — JSON mode and MCP server for AI assistant integration
@@ -21,18 +21,18 @@ Modern developers and knowledge workers maintain dozens of repositories, documen
 
 ```bash
 # Clone and build
-git clone https://github.com/urbanisierung/knowledge-index.git
-cd knowledge-index
+git clone https://github.com/urbanisierung/kdex.git
+cd kdex
 cargo build --release
 
 # Index a project
-./target/release/knowledge-index index /path/to/your/project
+./target/release/kdex index /path/to/your/project
 
 # Search across all indexed content
-./target/release/knowledge-index search "async function"
+./target/release/kdex search "async function"
 
 # Launch interactive TUI
-./target/release/knowledge-index
+./target/release/kdex
 
 # Or install globally
 cargo install --path .
@@ -45,7 +45,7 @@ The CLI supports two modes:
 ### App Mode (TUI)
 
 ```bash
-knowledge-index
+kdex
 ```
 
 Launches a full-screen interactive interface for searching and managing indexed repositories.
@@ -54,26 +54,26 @@ Launches a full-screen interactive interface for searching and managing indexed 
 
 ```bash
 # Index current directory
-knowledge-index index .
+kdex index .
 
 # Search for code
-knowledge-index search "database connection"
+kdex search "database connection"
 
 # List all indexed repos
-knowledge-index list
+kdex list
 
 # Get JSON output for scripting
-knowledge-index search "TODO" --json
+kdex search "TODO" --json
 ```
 
-Run `knowledge-index --help` for all available commands.
+Run `kdex --help` for all available commands.
 
 ## AI Integration (MCP)
 
-Start the MCP server to use knowledge-index with AI assistants:
+Start the MCP server to use kdex with AI assistants:
 
 ```bash
-knowledge-index mcp
+kdex mcp
 ```
 
 ### GitHub Copilot CLI
@@ -83,8 +83,8 @@ Add to your MCP servers configuration:
 ```json
 {
   "mcpServers": {
-    "knowledge-index": {
-      "command": "knowledge-index",
+    "kdex": {
+      "command": "kdex",
       "args": ["mcp"]
     }
   }
@@ -98,8 +98,8 @@ Add to `~/.config/claude/claude_desktop_config.json` (Linux/macOS) or `%APPDATA%
 ```json
 {
   "mcpServers": {
-    "knowledge-index": {
-      "command": "knowledge-index",
+    "kdex": {
+      "command": "kdex",
       "args": ["mcp"]
     }
   }

@@ -4,11 +4,29 @@
 
 ### 2026-02-10
 
-- **Added Phase 11 to Roadmap**
-  - Cross-platform build fixes (x86_64-apple-darwin ort issue)
-  - CLI branding/naming brainstorm
-  - Asciinema demo script creation
-  - Search efficiency audit for AI use cases
+- **Renamed CLI to `kdex`** (Knowledge DEX)
+  - Updated package name from `knowledge-index` to `kdex`
+  - All CLI commands now use `kdex` instead of `knowledge-index`
+  - Config directory auto-migrates from `~/.config/knowledge-index` to `~/.config/kdex`
+  - Environment variable changed to `KDEX_CONFIG_DIR` (legacy still supported)
+  - Updated all documentation, MCP server, and help text
+
+- **Fixed x86_64-apple-darwin Build**
+  - Removed x86_64-apple-darwin from release targets (Intel Mac legacy)
+  - ort-sys doesn't provide prebuilt ONNX binaries for this target
+  - Apple Silicon (aarch64-apple-darwin) still supported
+  - Intel Mac users can build from source
+
+- **Created Demo Script for asciinema**
+  - Added `scripts/demo.sh` for recording terminal demos
+  - Demonstrates indexing, searching, JSON output, MCP integration
+  - Instructions for recording with asciinema
+
+- **Search Efficiency Audit**
+  - Verified FTS5 search works well for common queries
+  - Tested "free port", "port 3000", tool names like "fuser"
+  - Results include highlighted snippets with match markers
+  - Search is efficient for AI assistant use cases
 
 ### 2026-02-09
 

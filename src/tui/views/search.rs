@@ -46,7 +46,7 @@ fn render_empty_state(frame: &mut Frame, app: &App, area: Rect) {
         vec![
             Line::from(""),
             Line::from(Span::styled(
-                "Welcome to knowledge-index!",
+                "Welcome to kdex!",
                 Style::default()
                     .add_modifier(Modifier::BOLD)
                     .fg(Color::Cyan),
@@ -54,7 +54,7 @@ fn render_empty_state(frame: &mut Frame, app: &App, area: Rect) {
             Line::from(""),
             Line::from("Get started:"),
             Line::from("  1. Press Tab to view repositories"),
-            Line::from("  2. Or run: knowledge-index index /path/to/project"),
+            Line::from("  2. Or run: kdex index /path/to/project"),
             Line::from(""),
             Line::from(Span::styled(
                 "Press ? for help",

@@ -158,10 +158,10 @@ pub fn run(key: Option<String>, value: Option<String>, reset: bool, args: &Args)
             println!(
                 "{} Set value: {}",
                 "Tip:".dimmed(),
-                "knowledge-index config max_file_size_mb 20".cyan()
+                "kdex config max_file_size_mb 20".cyan()
             );
         } else {
-            println!("Tip: Set value: knowledge-index config max_file_size_mb 20");
+            println!("Tip: Set value: kdex config max_file_size_mb 20");
         }
     }
 

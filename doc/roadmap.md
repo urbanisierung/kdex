@@ -1461,18 +1461,18 @@ Final fixes for cross-platform builds, branding improvements, and promotional ma
 
 The `ort` crate (ONNX Runtime) requires prebuilt binaries or manual compilation for certain targets.
 
-- [ ] Investigate `x86_64-apple-darwin` build failure:
+- [x] Investigate `x86_64-apple-darwin` build failure:
   - Error: `ort-sys@2.0.0-rc.11: ort does not provide prebuilt binaries for target x86_64-apple-darwin`
   - Options to investigate:
     1. Check if newer `ort` version includes x86_64-apple-darwin binaries
     2. Use `ort` feature flags to download binaries at build time
     3. Compile ONNX Runtime from source for this target
     4. Make semantic search optional at compile time (feature flag)
-- [ ] If unfixable: Remove `x86_64-apple-darwin` from release workflow
+- [x] Remove `x86_64-apple-darwin` from release from release workflow
   - Apple Silicon (`aarch64-apple-darwin`) build is working
   - x86_64 macOS is legacy (last Intel Mac shipped 2021)
   - Document that Intel Mac users should build from source
-- [ ] Verify all other release targets still build:
+- [x] Verify all other release targets still build:
   - `x86_64-unknown-linux-gnu` ✓
   - `aarch64-apple-darwin` ✓
   - `x86_64-pc-windows-msvc` ✓
@@ -1481,7 +1481,7 @@ The `ort` crate (ONNX Runtime) requires prebuilt binaries or manual compilation 
 
 Current name `knowledge-index` is descriptive but verbose. A shorter, memorable name improves adoption.
 
-- [ ] Brainstorm short name candidates (requirements: short, topic-relevant, available):
+- [x] Brainstorm short name candidates (requirements: short, topic-relevant, available):
   - `kix` — Knowledge IndeX (3 chars, memorable)
   - `dex` — Developer EXplorer / Document inDEX
   - `hive` — Central knowledge storage metaphor
@@ -1492,17 +1492,17 @@ Current name `knowledge-index` is descriptive but verbose. A shorter, memorable 
   - `ctx` — Context (for AI context building)
   - `skim` — Quick search metaphor
   - `ix` — Index abbreviation (2 chars)
-- [ ] Check name availability:
+- [x] Check name availability - chose kdex:
   - crates.io namespace
   - GitHub organization/repo
   - Homebrew formula names
   - Common package manager conflicts
-- [ ] Evaluate top candidates:
+- [x] Evaluate top candidates:
   - Pronounceability
   - Memorability
   - Typing ease (no special chars, easy on QWERTY)
   - Association with purpose
-- [ ] If renaming: Update all references:
+- [x] Renamed to kdex with migration:
   - `Cargo.toml` package name and binary name
   - Config directory name (with migration path)
   - Documentation and README
@@ -1512,7 +1512,7 @@ Current name `knowledge-index` is descriptive but verbose. A shorter, memorable 
 
 Create visual demonstrations for README, social media, and documentation.
 
-- [ ] Create asciinema recording script (`scripts/demo.sh`):
+- [x] Create asciinema recording script (`scripts/demo.sh`):
   - Show indexing a sample repository
   - Demonstrate TUI navigation and search
   - Show preview panel functionality
@@ -1531,7 +1531,7 @@ Create visual demonstrations for README, social media, and documentation.
 
 Validate that common AI assistant use cases work efficiently with current schema.
 
-- [ ] Test scenario: "How to kill a port" (user has documented this in markdown)
+- [x] Test scenario: "How to kill a port" (user has documented this in markdown)
   - Index a test vault with the answer documented
   - Run search via CLI and MCP
   - Measure: Does FTS5 find it with various phrasings?
@@ -1540,7 +1540,7 @@ Validate that common AI assistant use cases work efficiently with current schema
     - "stop process on port"
     - "port 3000 in use"
   - Document results and any improvements needed
-- [ ] Audit search relevance for common queries:
+- [x] Audit search relevance for common queries:
   - Commands/how-tos (action-oriented)
   - Code patterns (function signatures, imports)
   - Concepts (explanations, definitions)

@@ -9,24 +9,24 @@ cargo install --path .
 Or build from source:
 ```bash
 cargo build --release
-# Binary will be at ./target/release/knowledge-index
+# Binary will be at ./target/release/kdex
 ```
 
 ## Quick Start
 
 1. **Index a directory:**
    ```bash
-   knowledge-index index /path/to/project
+   kdex index /path/to/project
    ```
 
 2. **Search indexed content:**
    ```bash
-   knowledge-index search "your query"
+   kdex search "your query"
    ```
 
 3. **Launch interactive TUI:**
    ```bash
-   knowledge-index
+   kdex
    ```
 
 ## Usage
@@ -34,7 +34,7 @@ cargo build --release
 ### App Mode (TUI)
 
 ```bash
-knowledge-index
+kdex
 ```
 
 Launches the full-screen interactive interface.
@@ -60,7 +60,7 @@ Launches the full-screen interactive interface.
 ### CLI Mode
 
 ```bash
-knowledge-index [COMMAND] [OPTIONS]
+kdex [COMMAND] [OPTIONS]
 ```
 
 Global options:
@@ -76,12 +76,12 @@ Global options:
 Index a directory (code repository or knowledge base).
 
 ```bash
-knowledge-index index [PATH] [OPTIONS]
+kdex index [PATH] [OPTIONS]
 
 # Examples
-knowledge-index index                    # Index current directory
-knowledge-index index ~/projects/myapp   # Index specific project
-knowledge-index index ~/notes --name obsidian-vault
+kdex index                    # Index current directory
+kdex index ~/projects/myapp   # Index specific project
+kdex index ~/notes --name obsidian-vault
 ```
 
 Options:
@@ -92,15 +92,15 @@ Options:
 Search indexed content.
 
 ```bash
-knowledge-index search <QUERY> [OPTIONS]
+kdex search <QUERY> [OPTIONS]
 
 # Examples
-knowledge-index search "async fn"
-knowledge-index search "database connection" --repo api-service
-knowledge-index search "TODO" --type markdown
-knowledge-index search "config" --limit 50
-knowledge-index search "authentication logic" --semantic
-knowledge-index search "error handling" --hybrid
+kdex search "async fn"
+kdex search "database connection" --repo api-service
+kdex search "TODO" --type markdown
+kdex search "config" --limit 50
+kdex search "authentication logic" --semantic
+kdex search "error handling" --hybrid
 ```
 
 Options:
@@ -116,7 +116,7 @@ Options:
 List all indexed repositories.
 
 ```bash
-knowledge-index list
+kdex list
 
 # Output:
 # ● my-project    │    142 files │   5.2 MB │ 2 hours ago
@@ -128,8 +128,8 @@ knowledge-index list
 Update an existing index.
 
 ```bash
-knowledge-index update [PATH]
-knowledge-index update --all    # Update all repositories
+kdex update [PATH]
+kdex update --all    # Update all repositories
 ```
 
 ### `remove`
@@ -137,8 +137,8 @@ knowledge-index update --all    # Update all repositories
 Remove a repository from the index.
 
 ```bash
-knowledge-index remove /path/to/project
-knowledge-index remove . --force  # Skip confirmation
+kdex remove /path/to/project
+kdex remove . --force  # Skip confirmation
 ```
 
 ### `config`
@@ -146,9 +146,9 @@ knowledge-index remove . --force  # Skip confirmation
 Show or edit configuration.
 
 ```bash
-knowledge-index config                         # Show current config
-knowledge-index config max_file_size_mb 20     # Set a value
-knowledge-index config --reset                 # Reset to defaults
+kdex config                         # Show current config
+kdex config max_file_size_mb 20     # Set a value
+kdex config --reset                 # Reset to defaults
 ```
 
 ### `mcp`
@@ -156,7 +156,7 @@ knowledge-index config --reset                 # Reset to defaults
 Start the MCP (Model Context Protocol) server for AI assistant integration.
 
 ```bash
-knowledge-index mcp
+kdex mcp
 ```
 
 The MCP server allows AI tools like GitHub Copilot CLI, Claude Desktop, or other MCP-compatible clients to search and retrieve content from your indexed repositories. See [MCP Integration Guide](mcp-integration.md) for detailed setup instructions.
@@ -164,9 +164,9 @@ The MCP server allows AI tools like GitHub Copilot CLI, Claude Desktop, or other
 ## Configuration
 
 Configuration is stored at:
-- **Linux:** `~/.config/knowledge-index/config.toml`
-- **macOS:** `~/Library/Application Support/knowledge-index/config.toml`
-- **Windows:** `%APPDATA%\knowledge-index\config.toml`
+- **Linux:** `~/.config/kdex/config.toml`
+- **macOS:** `~/Library/Application Support/kdex/config.toml`
+- **Windows:** `%APPDATA%\kdex\config.toml`
 
 ### Config Options
 
@@ -184,9 +184,9 @@ Configuration is stored at:
 ## Database
 
 The index database is stored at:
-- **Linux:** `~/.config/knowledge-index/index.db`
-- **macOS:** `~/Library/Application Support/knowledge-index/index.db`
-- **Windows:** `%APPDATA%\knowledge-index\index.db`
+- **Linux:** `~/.config/kdex/index.db`
+- **macOS:** `~/Library/Application Support/kdex/index.db`
+- **Windows:** `%APPDATA%\kdex\index.db`
 
 It uses SQLite with FTS5 for full-text search. When semantic search is enabled, embeddings are stored in a separate table.
 
@@ -205,7 +205,7 @@ Full-text search using SQLite FTS5. Best for exact keyword matches, code symbols
 Vector-based search using embedding similarity. Best for conceptual queries where exact keywords may not match.
 
 ```bash
-knowledge-index search "how to handle authentication" --semantic
+kdex search "how to handle authentication" --semantic
 ```
 
 Requires `enable_semantic_search = true` in config. On first use, downloads the embedding model (~22MB).
@@ -214,5 +214,5 @@ Requires `enable_semantic_search = true` in config. On first use, downloads the 
 Combines lexical and semantic search using Reciprocal Rank Fusion (RRF). Provides the best of both approaches.
 
 ```bash
-knowledge-index search "error handling patterns" --hybrid
+kdex search "error handling patterns" --hybrid
 ```

@@ -28,7 +28,7 @@ pub fn render(frame: &mut Frame, _app: &App, area: Rect) {
         Line::from(vec![
             Span::styled("Welcome to ", Style::default().fg(Color::White)),
             Span::styled(
-                "knowledge-index",
+                "kdex",
                 Style::default()
                     .fg(Color::Cyan)
                     .add_modifier(Modifier::BOLD),
@@ -57,7 +57,7 @@ pub fn render(frame: &mut Frame, _app: &App, area: Rect) {
         Line::from(vec![
             Span::styled("     $ ", Style::default().fg(Color::DarkGray)),
             Span::styled(
-                "knowledge-index index ~/projects/myapp",
+                "kdex index ~/projects/myapp",
                 Style::default().fg(Color::Green),
             ),
         ]),
@@ -69,7 +69,7 @@ pub fn render(frame: &mut Frame, _app: &App, area: Rect) {
         Line::from(vec![
             Span::styled("     $ ", Style::default().fg(Color::DarkGray)),
             Span::styled(
-                "knowledge-index index ~/Documents/notes",
+                "kdex index ~/Documents/notes",
                 Style::default().fg(Color::Green),
             ),
         ]),

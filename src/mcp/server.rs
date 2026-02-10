@@ -12,7 +12,7 @@ use crate::config::Config;
 use crate::core::{Embedder, SearchMode, Searcher};
 use crate::db::Database;
 
-/// MCP server for knowledge-index.
+/// MCP server for kdex.
 #[derive(Clone)]
 pub struct KnowledgeIndexMcp {
     db: Arc<Mutex<Database>>,
@@ -315,7 +315,7 @@ pub async fn run_mcp_server(db: Database, config: Config) -> crate::error::Resul
 /// Print startup information and integration guide to stderr.
 fn print_mcp_startup_info() {
     eprintln!("\x1b[1;36m╭─────────────────────────────────────────────────────────────╮\x1b[0m");
-    eprintln!("\x1b[1;36m│\x1b[0m  \x1b[1mknowledge-index MCP Server\x1b[0m                                \x1b[1;36m│\x1b[0m");
+    eprintln!("\x1b[1;36m│\x1b[0m  \x1b[1mkdex MCP Server\x1b[0m                                          \x1b[1;36m│\x1b[0m");
     eprintln!("\x1b[1;36m╰─────────────────────────────────────────────────────────────╯\x1b[0m");
     eprintln!();
     eprintln!("\x1b[1mAvailable Tools:\x1b[0m");
@@ -330,8 +330,8 @@ fn print_mcp_startup_info() {
     eprintln!("  \x1b[90m┌──────────────────────────────────────────────────────────┐\x1b[0m");
     eprintln!("  \x1b[90m│\x1b[0m {{                                                         \x1b[90m│\x1b[0m");
     eprintln!("  \x1b[90m│\x1b[0m   \"mcpServers\": {{                                         \x1b[90m│\x1b[0m");
-    eprintln!("  \x1b[90m│\x1b[0m     \"knowledge-index\": {{                                  \x1b[90m│\x1b[0m");
-    eprintln!("  \x1b[90m│\x1b[0m       \"command\": \"knowledge-index\",                       \x1b[90m│\x1b[0m");
+    eprintln!("  \x1b[90m│\x1b[0m     \"kdex\": {{                                             \x1b[90m│\x1b[0m");
+    eprintln!("  \x1b[90m│\x1b[0m       \"command\": \"kdex\",                                  \x1b[90m│\x1b[0m");
     eprintln!("  \x1b[90m│\x1b[0m       \"args\": [\"mcp\"]                                     \x1b[90m│\x1b[0m");
     eprintln!("  \x1b[90m│\x1b[0m     }}                                                      \x1b[90m│\x1b[0m");
     eprintln!("  \x1b[90m│\x1b[0m   }}                                                        \x1b[90m│\x1b[0m");

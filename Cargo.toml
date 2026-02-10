@@ -1,14 +1,14 @@
 [package]
-name = "knowledge-index"
+name = "kdex"
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.88"
-description = "A CLI application for indexing and searching code repositories and knowledge bases for AI-powered workflows"
+description = "A fast CLI for indexing and searching code repositories and knowledge bases for AI-powered workflows"
 authors = ["urbanisierung"]
 license = "MIT"
-repository = "https://github.com/urbanisierung/knowledge-index"
-homepage = "https://github.com/urbanisierung/knowledge-index"
-documentation = "https://github.com/urbanisierung/knowledge-index/blob/main/doc/documentation.md"
+repository = "https://github.com/urbanisierung/kdex"
+homepage = "https://github.com/urbanisierung/kdex"
+documentation = "https://github.com/urbanisierung/kdex/blob/main/doc/documentation.md"
 readme = "README.md"
 keywords = ["cli", "search", "index", "knowledge", "ai"]
 categories = ["command-line-utilities", "development-tools", "text-processing"]
@@ -17,6 +17,10 @@ exclude = [
     "target/",
     "*.db",
 ]
+
+[[bin]]
+name = "kdex"
+path = "src/main.rs"
 
 [dependencies]
 # CLI

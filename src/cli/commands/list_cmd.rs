@@ -22,9 +22,9 @@ pub fn run(args: &Args) -> Result<()> {
             println!();
             println!("Get started by indexing a project:");
             if colors {
-                println!("  {}", "knowledge-index index /path/to/project".cyan());
+                println!("  {}", "kdex index /path/to/project".cyan());
             } else {
-                println!("  knowledge-index index /path/to/project");
+                println!("  kdex index /path/to/project");
             }
         }
         return Ok(());
