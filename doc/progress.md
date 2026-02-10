@@ -4,6 +4,12 @@
 
 ### 2026-02-10
 
+- **Added Phase 12: Marketing & Growth to Roadmap**
+  - README excellence with best practices from popular CLIs
+  - Marketing message and positioning strategy
+  - Ollama integration for local-first AI workflow
+  - Single-file landing page design (< 20KB, loads in < 1s)
+
 - **Renamed CLI to `kdex`** (Knowledge DEX)
   - Updated package name from `knowledge-index` to `kdex`
   - All CLI commands now use `kdex` instead of `knowledge-index`

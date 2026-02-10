@@ -1557,6 +1557,124 @@ Validate that common AI assistant use cases work efficiently with current schema
 
 ---
 
+## Phase 12: Marketing & Growth
+
+Create compelling marketing materials to drive adoption and communicate the value proposition clearly.
+
+**Goal:** Make kdex irresistible to developers and AI enthusiasts through engaging content and clear messaging.
+
+### Part 12.1: README Excellence
+
+Research popular CLI tools and apply best practices to create an engaging README.
+
+- [ ] Research top CLI README patterns:
+  - Study: `ripgrep`, `fd`, `bat`, `exa/eza`, `fzf`, `jq`, `httpie`
+  - Note: Hero section patterns, GIF demos, feature highlights
+  - Identify: What makes users want to try immediately?
+- [ ] Improve README structure:
+  - [ ] Add hero banner/logo (ASCII art or simple graphic)
+  - [ ] Write compelling one-liner tagline
+  - [ ] Add "Why kdex?" section with clear value props
+  - [ ] Include animated terminal demo (asciinema embed or GIF)
+  - [ ] Show before/after comparison (without kdex vs with kdex)
+  - [ ] Add badges (CI, crates.io, license, downloads)
+  - [ ] Simplify quickstart to 3 commands max
+  - [ ] Add testimonials/use cases section
+- [ ] Optimize for scanning:
+  - Bold key benefits
+  - Use emoji sparingly for visual anchors
+  - Keep paragraphs short (2-3 sentences max)
+  - Add "Table of Contents" for longer README
+
+### Part 12.2: Marketing Message & Positioning
+
+Define clear positioning and value proposition for all marketing materials.
+
+- [ ] Core value proposition:
+  - **Problem:** AI assistants lack context about YOUR code and notes
+  - **Solution:** kdex indexes everything locally, AI finds it instantly
+  - **Benefit:** Better AI answers, no cloud dependencies, works offline
+- [ ] Key messaging pillars:
+  1. **Local-first:** Your data never leaves your machine
+  2. **AI-ready:** MCP integration for GitHub Copilot, Claude, Ollama
+  3. **Instant setup:** One command to index, one command to search
+  4. **Universal:** Code repos, Obsidian vaults, any markdown
+- [ ] Target audiences:
+  - Developers using AI coding assistants
+  - Knowledge workers with Obsidian/Logseq vaults
+  - Privacy-conscious users avoiding cloud sync
+  - Teams wanting shared local knowledge bases
+- [ ] Competitive positioning:
+  - vs cloud search: "Your data stays local"
+  - vs manual grep: "AI understands context, not just keywords"
+  - vs RAG pipelines: "No Python, no dependencies, just one binary"
+
+### Part 12.3: Local AI Integration (Ollama)
+
+Add Ollama as a configuration example to reinforce the local-first message.
+
+- [ ] Document Ollama + kdex workflow:
+  - How to use kdex as context source for Ollama
+  - Example: pipe search results to Ollama prompt
+  - MCP integration possibilities
+- [ ] Add to documentation:
+  ```bash
+  # Search kdex, feed to Ollama
+  kdex search "authentication" --json | \
+    jq -r '.results[].snippet' | \
+    ollama run llama3 "Summarize this code context:"
+  ```
+- [ ] Create `doc/ollama-integration.md`:
+  - Step-by-step setup guide
+  - Use cases: code review, documentation Q&A, debugging help
+  - Performance tips for local LLMs
+- [ ] Update README with Ollama mention in AI integrations
+- [ ] Add Ollama example to MCP documentation
+
+### Part 12.4: Landing Page
+
+Create a minimal, fast, single-file landing page that sells the vision in 15 seconds.
+
+- [ ] Design principles:
+  - Single HTML file with inline CSS (no external deps)
+  - < 20KB total size, loads in < 1 second
+  - Mobile-responsive
+  - Dark mode by default (developer aesthetic)
+  - No JavaScript required for core content
+- [ ] Above-the-fold content (15-second message):
+  - Headline options (choose one):
+    - "Your AI finally knows what you know"
+    - "All your knowledge. One search. AI-ready."
+    - "Index everything. Find anything. Locally."
+  - Subhead: "Code, docs, notes, wikis — indexed locally for AI assistants. One binary. Zero cloud."
+  - Visual: Show code repo + Obsidian vault + wiki being indexed
+  - 3-second demo GIF or static terminal screenshot
+  - Single CTA: "Install now: `cargo install kdex`"
+- [ ] Key message points (communicate in 15 sec):
+  - Works with: code repos, Obsidian vaults, markdown wikis, any text
+  - AI assistants (Copilot, Claude, Ollama) can search YOUR knowledge
+  - Runs locally — your data never leaves your machine
+  - One command to index, instant search
+- [ ] Page structure:
+  1. Hero (headline + demo + install)
+  2. Problem/Solution (AI lacks YOUR context — code AND knowledge)
+  3. What it indexes (code + Obsidian + wikis + any markdown)
+  4. Features (3-4 key capabilities with icons)
+  5. Integrations (Copilot, Claude, Ollama logos)
+  6. Quickstart (3 commands)
+  7. Footer (GitHub link, license)
+- [ ] Create `docs/index.html` (GitHub Pages compatible):
+  - Pure HTML + inline CSS
+  - System fonts only (no web fonts)
+  - CSS custom properties for theming
+  - Semantic HTML for accessibility
+- [ ] Optional enhancements (still single file):
+  - Minimal JS for copy-to-clipboard on install command
+  - CSS animations for subtle polish
+  - Prefers-color-scheme for light/dark auto-switch
+
+---
+
 ## Brainstormed Additional Features
 
 Ideas for future consideration:
