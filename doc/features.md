@@ -37,6 +37,7 @@ kdex indexes your code, docs, notes, and wikis locally, making everything search
 | **MCP List Repos Tool** | List repositories via MCP | 2026-02-07 |
 | **MCP Get File Tool** | Retrieve file content via MCP | 2026-02-07 |
 | **MCP Get Context Tool** | Get line context around specific lines via MCP | 2026-02-07 |
+| **Gemini CLI Integration** | MCP integration docs for Gemini CLI | 2026-02-11 |
 | **Semantic Search** | Vector-based search using MiniLM embeddings | 2026-02-08 |
 | **Hybrid Search** | Combined lexical + semantic search with RRF fusion | 2026-02-08 |
 | **Text Chunking** | Smart chunking for embedding large files | 2026-02-08 |

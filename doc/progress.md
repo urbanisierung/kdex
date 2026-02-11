@@ -4,6 +4,12 @@
 
 ### 2026-02-11
 
+- **Documentation & Landing Page Update**
+  - Added Gemini CLI integration example to MCP documentation
+  - Added full documentation section to landing page with all commands and options
+  - Replaced external documentation links with in-page anchor links
+  - Added Gemini CLI to AI integrations showcase
+
 - **Implemented Phase 14 Features: Vault Presets & Search History**
   - Added VaultType enum with Obsidian, Logseq, Dendron, Generic variants
   - Auto-detect vault type when adding repositories (checks for `.obsidian/`, `logseq/`, `dendron.yml`)
