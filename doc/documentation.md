@@ -326,3 +326,104 @@ settings:
   enable_semantic_search: true
   default_search_mode: hybrid
 ```
+
+## Advanced Search
+
+### Fuzzy Search
+
+Use fuzzy search to find results even with typos:
+
+```bash
+kdex search "databse" --fuzzy    # Finds "database"
+kdex "autnetication" --fuzzy     # Finds "authentication"
+```
+
+### Regex Search
+
+Use regex patterns for advanced matching:
+
+```bash
+kdex search "fn\s+\w+" --regex           # Find function definitions
+kdex search "TODO|FIXME" --regex         # Find TODO markers
+kdex search "import .* from" --regex     # Find ES6 imports
+```
+
+### Tag Filter
+
+Filter results by frontmatter tags:
+
+```bash
+kdex search "api" --tag design
+kdex search "bug" --tag priority:high
+```
+
+## Knowledge Graph
+
+### Backlinks
+
+Find files that link to a target file:
+
+```bash
+kdex backlinks my-note.md        # Find files linking to my-note
+kdex backlinks project-idea      # Search by stem name
+kdex backlinks README --json     # JSON output
+```
+
+### Tags
+
+List all tags from indexed markdown files:
+
+```bash
+kdex tags                        # List all tags with counts
+kdex tags --json                 # JSON output
+```
+
+## AI Context Building
+
+### Context Command
+
+Build AI prompts from search results:
+
+```bash
+# Build context for an AI prompt
+kdex context "authentication"
+
+# Limit to 5 files
+kdex context "error handling" -l 5
+
+# Limit by token count
+kdex context "api design" --tokens 2000
+
+# Output as JSON for automation
+kdex context "database schema" --format json
+```
+
+The context command:
+- Searches for relevant files
+- Reads full file contents
+- Estimates token counts (~4 chars/token)
+- Respects token limits (truncates if needed)
+- Outputs in markdown, text, or JSON format
+
+## Shell Completions
+
+Generate shell completions for faster CLI usage:
+
+```bash
+# Bash
+kdex completions bash > ~/.local/share/bash-completion/completions/kdex
+
+# Zsh
+kdex completions zsh > ~/.zfunc/_kdex
+
+# Fish
+kdex completions fish > ~/.config/fish/completions/kdex.fish
+
+# PowerShell
+kdex completions power-shell > $PROFILE.CurrentUserAllHosts
+
+# Elvish
+kdex completions elvish > ~/.elvish/lib/kdex.elv
+```
+
+After installing completions, restart your shell or source the file.

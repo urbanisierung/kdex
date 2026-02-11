@@ -1111,6 +1111,63 @@ impl Database {
         let count: i64 = conn.query_row("SELECT COUNT(*) FROM embeddings", [], |row| row.get(0))?;
         Ok(count > 0)
     }
+
+    /// Get all unique tags with counts
+    pub fn get_all_tags(&self) -> Result<Vec<(String, usize)>> {
+        let conn = self
+            .conn
+            .lock()
+            .map_err(|e| AppError::Other(e.to_string()))?;
+
+        let mut stmt = conn.prepare(
+            "SELECT tag, COUNT(*) as count FROM tags GROUP BY tag ORDER BY count DESC",
+        )?;
+
+        let tags = stmt
+            .query_map([], |row| {
+                let tag: String = row.get(0)?;
+                let count: i64 = row.get(1)?;
+                Ok((tag, usize::try_from(count).unwrap_or(0)))
+            })?
+            .collect::<std::result::Result<Vec<_>, _>>()?;
+
+        Ok(tags)
+    }
+
+    /// Get backlinks to a file (files that link to the given target)
+    #[allow(clippy::type_complexity)]
+    pub fn get_backlinks(&self, target_name: &str) -> Result<Vec<(String, String, String, Option<usize>)>> {
+        let conn = self
+            .conn
+            .lock()
+            .map_err(|e| AppError::Other(e.to_string()))?;
+
+        let mut stmt = conn.prepare(
+            r"
+            SELECT f.relative_path, r.name, l.link_text, l.line_number
+            FROM links l
+            JOIN files f ON l.source_file_id = f.id
+            JOIN repositories r ON f.repo_id = r.id
+            WHERE l.target_name = ?1 OR l.target_name LIKE ?2
+            ORDER BY r.name, f.relative_path
+            ",
+        )?;
+
+        // Search for exact match or partial match (file without extension)
+        let pattern = format!("%{target_name}%");
+
+        let backlinks = stmt
+            .query_map(rusqlite::params![target_name, pattern], |row| {
+                let file_path: String = row.get(0)?;
+                let repo_name: String = row.get(1)?;
+                let link_text: String = row.get(2)?;
+                let line_number: Option<i64> = row.get(3)?;
+                Ok((file_path, repo_name, link_text, line_number.and_then(|n| usize::try_from(n).ok())))
+            })?
+            .collect::<std::result::Result<Vec<_>, _>>()?;
+
+        Ok(backlinks)
+    }
 }
 
 /// Vector search result

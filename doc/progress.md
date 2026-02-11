@@ -4,6 +4,17 @@
 
 ### 2026-02-11
 
+- **Implemented Phase 14 Features: Search Enhancements & Developer Experience**
+  - Added `completions` command for generating shell completions (bash, zsh, fish, PowerShell, elvish)
+  - Added `backlinks` command for finding files that link to a target
+  - Added `tags` command for listing all tags from indexed files
+  - Added `context` command for building AI prompts from search results with token limits
+  - Added `--fuzzy` flag for typo-tolerant search using Jaro-Winkler similarity
+  - Added `--regex` flag for pattern matching with regular expressions
+  - Added `--tag` flag for filtering by frontmatter tags (placeholder)
+  - Extended database schema (v4) with dedicated tags and links tables
+  - Added clap_complete, strsim, regex dependencies
+
 - **Default Search Command**
   - Search is now the default command: `kdex "query"` works without typing `search`
   - Added short flags for search: `-r` (repo), `-t` (file-type), `-l` (limit), `-s` (semantic), `-H` (hybrid), `-g` (group-by-repo)

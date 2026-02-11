@@ -25,6 +25,10 @@ const KNOWN_COMMANDS: &[&str] = &[
     "mcp",
     "watch",
     "rebuild-embeddings",
+    "completions",
+    "backlinks",
+    "tags",
+    "context",
     "help",
 ];
 
@@ -123,20 +127,26 @@ fn run_command(cmd: Commands, args: &Args) -> Result<()> {
             query,
             repo,
             file_type,
+            tag,
             limit,
             group_by_repo,
             semantic,
             hybrid,
             lexical,
+            fuzzy,
+            regex,
         } => commands::search::run(
             query,
             repo,
             file_type,
+            tag,
             limit,
             group_by_repo,
             semantic,
             hybrid,
             lexical,
+            fuzzy,
+            regex,
             args,
         ),
         Commands::List {} => commands::list::run(args),
@@ -152,6 +162,18 @@ fn run_command(cmd: Commands, args: &Args) -> Result<()> {
         Commands::Mcp {} => run_mcp_server(),
         Commands::Watch { all, path } => run_watcher(all, path, args),
         Commands::RebuildEmbeddings { repo } => commands::rebuild_embeddings::run(repo, args),
+        Commands::Completions { shell } => {
+            commands::completions::run(shell);
+            Ok(())
+        }
+        Commands::Backlinks { file } => commands::backlinks::run(&file, args),
+        Commands::Tags => commands::tags::run(args),
+        Commands::Context {
+            query,
+            limit,
+            tokens,
+            format,
+        } => commands::context::run(&query, limit, tokens, &format, args),
     }
 }
 

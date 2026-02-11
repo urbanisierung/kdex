@@ -70,6 +70,12 @@ kdex indexes your code, docs, notes, and wikis locally, making everything search
 | **Remote Cleanup** | Auto-delete cloned repos when removed from index | 2026-02-09 |
 | **Default Search** | Search without typing `search` - just `kdex "query"` | 2026-02-11 |
 | **Short Flags** | `-r`, `-t`, `-l`, `-s`, `-H`, `-g` for faster searching | 2026-02-11 |
+| **Shell Completions** | Generate completions for bash, zsh, fish, PowerShell | 2026-02-11 |
+| **Fuzzy Search** | Typo-tolerant search using Jaro-Winkler similarity | 2026-02-11 |
+| **Regex Search** | Pattern matching with regular expressions | 2026-02-11 |
+| **Backlinks Discovery** | Find files linking to a target (`[[wiki-links]]`) | 2026-02-11 |
+| **Tags Browser** | List all tags from indexed markdown frontmatter | 2026-02-11 |
+| **Context Builder** | Build AI prompts from search results with token limits | 2026-02-11 |
 
 ## Planned Features
 

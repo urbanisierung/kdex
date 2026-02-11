@@ -2,7 +2,7 @@ use rusqlite::Connection;
 
 use crate::error::Result;
 
-pub const SCHEMA_VERSION: i32 = 3;
+pub const SCHEMA_VERSION: i32 = 4;
 
 /// Initialize database schema
 pub fn initialize(conn: &Connection) -> Result<()> {
@@ -144,6 +144,35 @@ fn migrate(conn: &Connection, from_version: i32) -> Result<()> {
             ALTER TABLE repositories ADD COLUMN last_synced_at TEXT;
 
             CREATE INDEX IF NOT EXISTS idx_repos_source_type ON repositories(source_type);
+            ",
+        )?;
+    }
+
+    if from_version < 4 {
+        // Add dedicated tags and links tables for knowledge graph features
+        conn.execute_batch(
+            r"
+            -- Create tags table for efficient tag queries
+            CREATE TABLE IF NOT EXISTS tags (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                file_id INTEGER NOT NULL,
+                tag TEXT NOT NULL,
+                FOREIGN KEY (file_id) REFERENCES files(id) ON DELETE CASCADE
+            );
+            CREATE INDEX IF NOT EXISTS idx_tags_tag ON tags(tag);
+            CREATE INDEX IF NOT EXISTS idx_tags_file ON tags(file_id);
+
+            -- Create links table for backlink discovery
+            CREATE TABLE IF NOT EXISTS links (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                source_file_id INTEGER NOT NULL,
+                target_name TEXT NOT NULL,
+                link_text TEXT NOT NULL,
+                line_number INTEGER,
+                FOREIGN KEY (source_file_id) REFERENCES files(id) ON DELETE CASCADE
+            );
+            CREATE INDEX IF NOT EXISTS idx_links_target ON links(target_name);
+            CREATE INDEX IF NOT EXISTS idx_links_source ON links(source_file_id);
             ",
         )?;
     }

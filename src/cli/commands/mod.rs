@@ -1,15 +1,25 @@
 mod add_cmd;
+mod backlinks_cmd;
+mod completions_cmd;
 mod config_cmd;
+mod context_cmd;
 mod index_cmd;
 mod list_cmd;
 mod rebuild_embeddings_cmd;
 mod remove_cmd;
 mod search_cmd;
 mod sync_cmd;
+mod tags_cmd;
 mod update_cmd;
 
 pub mod add {
     pub use super::add_cmd::run;
+}
+pub mod backlinks {
+    pub use super::backlinks_cmd::run;
+}
+pub mod completions {
+    pub use super::completions_cmd::run;
 }
 pub mod index {
     pub use super::index_cmd::run;
@@ -29,10 +39,16 @@ pub mod remove {
 pub mod config {
     pub use super::config_cmd::run;
 }
+pub mod context {
+    pub use super::context_cmd::run;
+}
 pub mod sync {
     #[allow(unused_imports)]
     pub use super::sync_cmd::background_sync;
     pub use super::sync_cmd::run;
+}
+pub mod tags {
+    pub use super::tags_cmd::run;
 }
 pub mod rebuild_embeddings {
     pub use super::rebuild_embeddings_cmd::run;
