@@ -85,8 +85,22 @@ pub fn run(format: &str, repo: Option<&str>, args: &Args) -> Result<()> {
     let orphan_count = total_nodes - connected_count;
 
     match format {
-        "json" => output_json(&nodes, &edges, &node_to_repo, total_nodes, connected_count, orphan_count)?,
-        _ => output_dot(&nodes, &edges, colors, total_nodes, connected_count, orphan_count),
+        "json" => output_json(
+            &nodes,
+            &edges,
+            &node_to_repo,
+            total_nodes,
+            connected_count,
+            orphan_count,
+        )?,
+        _ => output_dot(
+            &nodes,
+            &edges,
+            colors,
+            total_nodes,
+            connected_count,
+            orphan_count,
+        ),
     }
 
     Ok(())

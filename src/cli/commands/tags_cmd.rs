@@ -84,10 +84,7 @@ pub fn run(args: &Args) -> Result<()> {
     if !args.quiet {
         println!();
         if colors {
-            println!(
-                "{} unique tags",
-                tags.len().to_string().green()
-            );
+            println!("{} unique tags", tags.len().to_string().green());
         } else {
             println!("{} unique tags", tags.len());
         }

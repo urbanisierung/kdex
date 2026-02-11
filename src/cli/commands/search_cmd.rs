@@ -35,12 +35,26 @@ pub fn run(
 
     // Handle regex search mode
     if regex {
-        return run_regex_search(&query, repo.as_deref(), file_type.as_deref(), limit, group_by_repo, args);
+        return run_regex_search(
+            &query,
+            repo.as_deref(),
+            file_type.as_deref(),
+            limit,
+            group_by_repo,
+            args,
+        );
     }
 
     // Handle fuzzy search mode
     if fuzzy {
-        return run_fuzzy_search(&query, repo.as_deref(), file_type.as_deref(), limit, group_by_repo, args);
+        return run_fuzzy_search(
+            &query,
+            repo.as_deref(),
+            file_type.as_deref(),
+            limit,
+            group_by_repo,
+            args,
+        );
     }
 
     // Determine search mode
@@ -360,7 +374,10 @@ fn run_fuzzy_search(
     // Also do an exact match search
     if let Ok(exact_results) = db.search(query, repo, file_type, limit * 5, 0) {
         for r in exact_results {
-            if !results.iter().any(|existing| existing.file_path == r.file_path) {
+            if !results
+                .iter()
+                .any(|existing| existing.file_path == r.file_path)
+            {
                 results.push(r);
             }
         }
@@ -470,7 +487,9 @@ fn run_regex_search(
             if let Ok(content) = std::fs::read_to_string(&full_path) {
                 if let Some(m) = regex.find(&content) {
                     let start = content[..m.start()].rfind('\n').map_or(0, |p| p + 1);
-                    let end = content[m.end()..].find('\n').map_or(content.len(), |p| m.end() + p);
+                    let end = content[m.end()..]
+                        .find('\n')
+                        .map_or(content.len(), |p| m.end() + p);
                     let snippet = &content[start..end];
 
                     results.push(crate::db::SearchResult {

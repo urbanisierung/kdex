@@ -1155,9 +1155,8 @@ impl Database {
             .lock()
             .map_err(|e| AppError::Other(e.to_string()))?;
 
-        let mut stmt = conn.prepare(
-            "SELECT tag, COUNT(*) as count FROM tags GROUP BY tag ORDER BY count DESC",
-        )?;
+        let mut stmt = conn
+            .prepare("SELECT tag, COUNT(*) as count FROM tags GROUP BY tag ORDER BY count DESC")?;
 
         let tags = stmt
             .query_map([], |row| {
@@ -1172,7 +1171,10 @@ impl Database {
 
     /// Get backlinks to a file (files that link to the given target)
     #[allow(clippy::type_complexity)]
-    pub fn get_backlinks(&self, target_name: &str) -> Result<Vec<(String, String, String, Option<usize>)>> {
+    pub fn get_backlinks(
+        &self,
+        target_name: &str,
+    ) -> Result<Vec<(String, String, String, Option<usize>)>> {
         let conn = self
             .conn
             .lock()
@@ -1198,7 +1200,12 @@ impl Database {
                 let repo_name: String = row.get(1)?;
                 let link_text: String = row.get(2)?;
                 let line_number: Option<i64> = row.get(3)?;
-                Ok((file_path, repo_name, link_text, line_number.and_then(|n| usize::try_from(n).ok())))
+                Ok((
+                    file_path,
+                    repo_name,
+                    link_text,
+                    line_number.and_then(|n| usize::try_from(n).ok()),
+                ))
             })?
             .collect::<std::result::Result<Vec<_>, _>>()?;
 
@@ -1260,8 +1267,10 @@ impl Database {
             .lock()
             .map_err(|e| AppError::Other(e.to_string()))?;
 
-        let total_files: i64 = conn.query_row("SELECT COUNT(*) FROM files", [], |row| row.get(0))?;
-        let total_repos: i64 = conn.query_row("SELECT COUNT(*) FROM repositories", [], |row| row.get(0))?;
+        let total_files: i64 =
+            conn.query_row("SELECT COUNT(*) FROM files", [], |row| row.get(0))?;
+        let total_repos: i64 =
+            conn.query_row("SELECT COUNT(*) FROM repositories", [], |row| row.get(0))?;
 
         // Count by file type
         let mut stmt = conn.prepare("SELECT file_type, COUNT(*) FROM files GROUP BY file_type")?;
@@ -1270,9 +1279,19 @@ impl Database {
             .filter_map(std::result::Result::ok)
             .collect();
 
-        let total_tags: i64 = conn.query_row("SELECT COUNT(DISTINCT tag) FROM tags", [], |row| row.get(0)).unwrap_or(0);
-        let total_links: i64 = conn.query_row("SELECT COUNT(*) FROM links", [], |row| row.get(0)).unwrap_or(0);
-        let total_embeddings: i64 = conn.query_row("SELECT COUNT(DISTINCT file_id) FROM embeddings", [], |row| row.get(0)).unwrap_or(0);
+        let total_tags: i64 = conn
+            .query_row("SELECT COUNT(DISTINCT tag) FROM tags", [], |row| row.get(0))
+            .unwrap_or(0);
+        let total_links: i64 = conn
+            .query_row("SELECT COUNT(*) FROM links", [], |row| row.get(0))
+            .unwrap_or(0);
+        let total_embeddings: i64 = conn
+            .query_row(
+                "SELECT COUNT(DISTINCT file_id) FROM embeddings",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap_or(0);
 
         // Database size
         let db_path = Config::database_path()?;

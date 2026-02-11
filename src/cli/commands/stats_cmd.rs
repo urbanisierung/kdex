@@ -80,10 +80,7 @@ pub fn run(args: &Args) -> Result<()> {
 
         // Repositories and files
         println!("{}", "📁 Content".bold());
-        println!(
-            "   Repositories: {}",
-            stats.total_repos.to_string().cyan()
-        );
+        println!("   Repositories: {}", stats.total_repos.to_string().cyan());
         println!("   Total files:  {}", stats.total_files.to_string().cyan());
         println!();
 

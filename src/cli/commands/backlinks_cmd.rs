@@ -76,11 +76,7 @@ pub fn run(file: &Path, args: &Args) -> Result<()> {
 
     if !args.quiet {
         if colors {
-            println!(
-                "{} {}",
-                "Backlinks to".bold(),
-                target_name.cyan().bold()
-            );
+            println!("{} {}", "Backlinks to".bold(), target_name.cyan().bold());
             println!("{}", "─".repeat(50).dimmed());
         } else {
             println!("Backlinks to {target_name}");
@@ -113,10 +109,7 @@ pub fn run(file: &Path, args: &Args) -> Result<()> {
     if !args.quiet {
         println!();
         if colors {
-            println!(
-                "{} files link to this",
-                backlinks.len().to_string().green()
-            );
+            println!("{} files link to this", backlinks.len().to_string().green());
         } else {
             println!("{} files link to this", backlinks.len());
         }

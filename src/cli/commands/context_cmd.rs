@@ -51,7 +51,8 @@ pub fn run(query: &str, limit: usize, max_tokens: usize, format: &str, args: &Ar
     };
 
     // Search for relevant files
-    let results = searcher.search_with_mode(query, SearchMode::Lexical, None, None, limit * 2, 0)?;
+    let results =
+        searcher.search_with_mode(query, SearchMode::Lexical, None, None, limit * 2, 0)?;
 
     if results.is_empty() {
         if args.json {
@@ -96,11 +97,7 @@ pub fn run(query: &str, limit: usize, max_tokens: usize, format: &str, args: &Ar
                 let truncated: String = content.chars().take(truncated_len).collect();
                 let truncated_content = format!("{truncated}\n\n[... truncated ...]");
 
-                let header = format!(
-                    "## {}/{}\n\n",
-                    result.repo_name,
-                    result.file_path.display()
-                );
+                let header = format!("## {}/{}\n\n", result.repo_name, result.file_path.display());
                 context_parts.push(format!("{header}{truncated_content}"));
 
                 files.push(ContextFile {
@@ -117,11 +114,7 @@ pub fn run(query: &str, limit: usize, max_tokens: usize, format: &str, args: &Ar
         }
 
         // Add full file content
-        let header = format!(
-            "## {}/{}\n\n",
-            result.repo_name,
-            result.file_path.display()
-        );
+        let header = format!("## {}/{}\n\n", result.repo_name, result.file_path.display());
         context_parts.push(format!("{header}{content}"));
 
         files.push(ContextFile {

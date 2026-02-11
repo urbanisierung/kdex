@@ -40,7 +40,7 @@ impl SearchHistory {
     /// Load search history from disk
     pub fn load() -> Result<Self> {
         let path = Self::history_path()?;
-        
+
         if !path.exists() {
             return Ok(Self::default());
         }
@@ -53,7 +53,7 @@ impl SearchHistory {
     /// Save search history to disk
     pub fn save(&self) -> Result<()> {
         let path = Self::history_path()?;
-        
+
         // Ensure parent directory exists
         if let Some(parent) = path.parent() {
             fs::create_dir_all(parent)?;
@@ -126,7 +126,7 @@ mod tests {
         let mut history = SearchHistory::default();
         history.add("first query");
         history.add("second query");
-        
+
         assert_eq!(history.len(), 2);
         assert_eq!(history.get(0), Some(&"second query".to_string()));
         assert_eq!(history.get(1), Some(&"first query".to_string()));
@@ -138,7 +138,7 @@ mod tests {
         history.add("query");
         history.add("other");
         history.add("query"); // Should move to front
-        
+
         assert_eq!(history.len(), 2);
         assert_eq!(history.get(0), Some(&"query".to_string()));
     }
@@ -149,12 +149,12 @@ mod tests {
             max_size: 3,
             ..Default::default()
         };
-        
+
         history.add("1");
         history.add("2");
         history.add("3");
         history.add("4");
-        
+
         assert_eq!(history.len(), 3);
         assert_eq!(history.get(0), Some(&"4".to_string()));
     }

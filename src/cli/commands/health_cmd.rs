@@ -75,8 +75,7 @@ pub fn run(repo: Option<&str>, args: &Args) -> Result<()> {
         let target_exists = known_files.contains(&link.target_name)
             || known_stems.contains(&target_lower)
             || known_files.iter().any(|f| {
-                f.to_lowercase().contains(&target_lower)
-                    || f.to_lowercase().ends_with(&suffix)
+                f.to_lowercase().contains(&target_lower) || f.to_lowercase().ends_with(&suffix)
             });
 
         if !target_exists {
@@ -203,7 +202,10 @@ pub fn run(repo: Option<&str>, args: &Args) -> Result<()> {
         } else {
             println!("✗ {} broken links:", broken_links.len());
             for bl in broken_links.iter().take(10) {
-                println!("  {} → {} (target: {})", bl.source_repo, bl.source_path, bl.target);
+                println!(
+                    "  {} → {} (target: {})",
+                    bl.source_repo, bl.source_path, bl.target
+                );
             }
             if broken_links.len() > 10 {
                 println!("  ... and {} more", broken_links.len() - 10);
