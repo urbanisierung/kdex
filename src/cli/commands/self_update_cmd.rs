@@ -1,7 +1,9 @@
 use crate::error::{AppError, Result};
 use std::fs;
+#[cfg(not(target_os = "windows"))]
 use std::process::Command;
 
+#[cfg(not(target_os = "windows"))]
 const INSTALL_SCRIPT_URL: &str = "https://urbanisierung.github.io/kdex/install.sh";
 
 /// Check if kdex was installed via the install script
