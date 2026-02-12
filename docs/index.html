@@ -495,6 +495,16 @@ kdex graph --json > graph.json   # JSON format</pre>
       <p style="color: var(--text-muted);">Start MCP server for AI assistants</p>
       <pre>kdex mcp</pre>
 
+      <h4>add-mcp</h4>
+      <p style="color: var(--text-muted);">Automatically configure MCP for AI tools</p>
+      <pre>kdex add-mcp copilot    # Configure GitHub Copilot CLI
+kdex add-mcp gemini     # Configure Gemini CLI
+kdex add-mcp claude     # Configure Claude Desktop</pre>
+
+      <h4>self-update</h4>
+      <p style="color: var(--text-muted);">Update kdex (script-based installs only)</p>
+      <pre>kdex self-update</pre>
+
       <h4>config</h4>
       <p style="color: var(--text-muted);">Manage configuration</p>
       <pre>kdex config show              # Show current config
@@ -508,10 +518,10 @@ kdex completions zsh >> ~/.zshrc
 kdex completions fish > ~/.config/fish/completions/kdex.fish</pre>
 
       <h3>MCP Integration</h3>
-      <p style="color: var(--text-muted); margin-bottom: 1rem;">Connect kdex to AI assistants via the Model Context Protocol.</p>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">Connect kdex to AI assistants via the Model Context Protocol. Use <code>kdex add-mcp &lt;tool&gt;</code> to auto-configure, or manually add:</p>
       
       <h4>Claude Desktop</h4>
-      <p style="color: var(--text-muted);">Add to <code>~/.config/claude/claude_desktop_config.json</code>:</p>
+      <p style="color: var(--text-muted);"><code>kdex add-mcp claude</code> or add to <code>~/.config/claude/claude_desktop_config.json</code>:</p>
       <pre>{
   "mcpServers": {
     "kdex": { "command": "kdex", "args": ["mcp"] }
@@ -519,7 +529,7 @@ kdex completions fish > ~/.config/fish/completions/kdex.fish</pre>
 }</pre>
 
       <h4>GitHub Copilot CLI</h4>
-      <p style="color: var(--text-muted);">Add to <code>~/.config/github-copilot/mcp.json</code>:</p>
+      <p style="color: var(--text-muted);"><code>kdex add-mcp copilot</code> or add to <code>~/.config/github-copilot/mcp.json</code>:</p>
       <pre>{
   "mcpServers": {
     "kdex": { "command": "kdex", "args": ["mcp"] }
@@ -527,7 +537,7 @@ kdex completions fish > ~/.config/fish/completions/kdex.fish</pre>
 }</pre>
 
       <h4>Gemini CLI</h4>
-      <p style="color: var(--text-muted);">Add to <code>~/.gemini/settings.json</code>:</p>
+      <p style="color: var(--text-muted);"><code>kdex add-mcp gemini</code> or add to <code>~/.gemini/settings.json</code>:</p>
       <pre>{
   "mcpServers": {
     "kdex": { "command": "kdex", "args": ["mcp"], "timeout": 30000 }

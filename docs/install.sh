@@ -143,6 +143,11 @@ download_and_install() {
     cp "$BINARY_PATH" "$install_dir/$BINARY_NAME"
     chmod +x "$install_dir/$BINARY_NAME"
     
+    # Create install method marker for self-update support
+    CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/kdex"
+    mkdir -p "$CONFIG_DIR"
+    echo "script" > "$CONFIG_DIR/.install-method"
+    
     success "Installed $BINARY_NAME to $install_dir/$BINARY_NAME"
 }
 
