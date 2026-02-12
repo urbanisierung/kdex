@@ -1,6 +1,6 @@
 [package]
 name = "kdex"
-version = "0.1.0"
+version = "1.0.1"
 edition = "2021"
 rust-version = "1.88"
 description = "A fast CLI for indexing and searching code repositories and knowledge bases for AI-powered workflows"
