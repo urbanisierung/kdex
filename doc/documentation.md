@@ -2,15 +2,33 @@
 
 ## Installation
 
+### Quick Install (recommended)
+
 ```bash
+curl -sSf https://urbanisierung.github.io/kdex/install.sh | sh
+```
+
+Downloads the latest binary to `~/.local/bin`. No Rust required.
+
+To update, re-run the same command.
+
+### From crates.io
+
+```bash
+cargo install kdex
+```
+
+### From source
+
+```bash
+git clone https://github.com/urbanisierung/kdex.git
+cd kdex
 cargo install --path .
 ```
 
-Or build from source:
-```bash
-cargo build --release
-# Binary will be at ./target/release/kdex
-```
+### Pre-built binaries
+
+Download from [GitHub Releases](https://github.com/urbanisierung/kdex/releases) for Linux, macOS, and Windows.
 
 ## Quick Start
 

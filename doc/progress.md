@@ -4,6 +4,14 @@
 
 ### 2026-02-12
 
+- **Added install script for easy installation**
+  - Created `install.sh` hosted on GitHub Pages
+  - Auto-detects OS (Linux/macOS) and architecture (x86_64/aarch64)
+  - Downloads latest binary from GitHub releases
+  - Installs to `~/.local/bin` without requiring Rust
+  - Re-running the script updates to latest version
+  - Updated README, landing page, and documentation
+
 - **Fixed Cargo.lock tracking**
   - Removed Cargo.lock from .gitignore (should be tracked for binary applications)
   - Enables release workflow to commit version updates properly
