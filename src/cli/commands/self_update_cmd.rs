@@ -60,10 +60,10 @@ pub fn run(json_output: bool) -> Result<()> {
     // Run the install script
     #[cfg(target_os = "windows")]
     {
-        return Err(AppError::Other(
+        Err(AppError::Other(
             "Self-update via script is not supported on Windows. Use: cargo install kdex"
                 .to_string(),
-        ));
+        ))
     }
 
     #[cfg(not(target_os = "windows"))]
